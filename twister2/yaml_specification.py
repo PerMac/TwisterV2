@@ -4,6 +4,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+logger = logging.getLogger(__name__)
+
 
 def pytest_collect_file(parent, path):
     if path.ext == ".yaml" and path.basename.startswith("test"):
@@ -23,6 +25,14 @@ class YamlItem(pytest.Item):
     def __init__(self, name, parent, spec):
         super().__init__(name, parent)
         self.spec = spec
+
+    def setup(self) -> None:
+        super().setup()
+        logger.info('setup %s', repr(self))
+
+    def teardown(self) -> None:
+        super().teardown()
+        logger.info('teardown %s', repr(self))
 
     def runtest(self):
         for name, value in sorted(self.spec.items()):
