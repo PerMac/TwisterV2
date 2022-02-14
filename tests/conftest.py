@@ -2,8 +2,10 @@ import logging
 
 import pytest
 
+logger = logging.getLogger(__name__)
 
-def pytest_collection_modifyitems(session, config, items):
+
+def pytest_collection_modifyitems(session: pytest.Session, config: pytest.Config, items: list[pytest.Item]):
     selected_items = []
     deselected_items = []
 
@@ -16,5 +18,5 @@ def pytest_collection_modifyitems(session, config, items):
 
 
 @pytest.hookimpl(tryfirst=True)
-def pytest_runtest_setup(item) -> None:
-    logging.warning('setup')
+def pytest_runtest_setup(item: pytest.Item) -> None:
+    logger.info('setup item %s', item.nodeid)
