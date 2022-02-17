@@ -35,9 +35,12 @@ class YamlItem(pytest.Item):
         logger.info('teardown %s', repr(self))
 
     def runtest(self):
+        logger.info('Runing test %s', repr(self))
+
         for name, value in sorted(self.spec.items()):
             # Some custom test execution (dumb example follows).
             if name != value:
+                logger.error('Test failed %s', repr(self))
                 raise YamlException(self, name, value)
 
     def repr_failure(self, excinfo):

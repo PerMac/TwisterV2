@@ -6,6 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 def pytest_collection_modifyitems(session: pytest.Session, config: pytest.Config, items: list[pytest.Item]):
+    logger.info('Modyfing tests before run')
     selected_items = []
     deselected_items = []
 
@@ -19,4 +20,4 @@ def pytest_collection_modifyitems(session: pytest.Session, config: pytest.Config
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_runtest_setup(item: pytest.Item) -> None:
-    logger.info('setup item %s', item.nodeid)
+    logger.info('setup item %s', repr(item))
