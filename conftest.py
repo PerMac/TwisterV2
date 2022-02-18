@@ -9,4 +9,5 @@ logging.basicConfig(
 pytest_plugins = (
     'twister2.plugin',
     'twister2.yaml_specification',
+    'twister2.yaml_specification2',
 )

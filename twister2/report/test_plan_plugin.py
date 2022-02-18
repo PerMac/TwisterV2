@@ -13,7 +13,7 @@ def get_suite_name(item: pytest.Item) -> str:
     """Return suite name"""
     if hasattr(item, 'cls') and item.cls:
         return f'{item.module.__name__}::{item.cls.__name__}'
-    elif hasattr(item, 'module'):
+    elif hasattr(item, 'module') and hasattr(item.module, '__name__'):
         return f'{item.module.__name__}'
     else:
         return item.path
@@ -36,9 +36,9 @@ class TestPlanPlugin:
     """
 
     def __init__(
-        self, 
-        logfile: str, 
-        config: pytest.Config, 
+        self,
+        logfile: str,
+        config: pytest.Config,
         spec_report_class: SpecReportInterface | None = None
     ):
         logfile = os.path.expanduser(os.path.expandvars(logfile))
