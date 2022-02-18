@@ -4,6 +4,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+from .exceptions import YamlException
+
 logger = logging.getLogger(__name__)
 
 
@@ -56,7 +58,3 @@ class YamlItem(pytest.Item):
 
     def reportinfo(self):
         return self.path, 0, f"usecase: {self.name}"
-
-
-class YamlException(Exception):
-    """Custom exception for error reporting."""
