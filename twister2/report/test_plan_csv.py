@@ -1,3 +1,6 @@
+"""
+Simple class to generate test plan report in CSV format
+"""
 import csv
 import os
 
@@ -5,6 +8,9 @@ import os
 class CsvTestPlan:
 
     def __init__(self, filename: str):
+        """
+        :param filename: output file name
+        """
         self.filename = filename
         self.delimiter = ','
         self.quotechar = '"'

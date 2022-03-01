@@ -1,6 +1,0 @@
-test_ok:
-    sub1: sub1
-
-test_hello:
-    world: world
-    some: other

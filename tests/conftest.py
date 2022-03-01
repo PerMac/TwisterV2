@@ -1,6 +1,23 @@
 import logging
+import sys
+from pathlib import Path
 
 import pytest
+
+sys.path.append(str(Path(__file__).parents[1]))
+
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename='test.log',
+    filemode='w',
+)
+
+# list of plugins which should be loaded by pytest
+pytest_plugins = (
+    'twister2.plugin',
+)
+
 
 logger = logging.getLogger(__name__)
 

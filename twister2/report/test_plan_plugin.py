@@ -1,3 +1,6 @@
+"""
+Plugin to generate test plan report
+"""
 from __future__ import annotations
 
 import os
@@ -72,6 +75,7 @@ class TestPlanPlugin:
             self.generate(items)
 
     def pytest_terminal_summary(self, terminalreporter: TerminalReporter) -> None:
+        # print summary to terminal
         terminalreporter.ensure_newline()
         terminalreporter.write_sep('-', f'generated testplan file: {self.logfile}', green=True)
 
