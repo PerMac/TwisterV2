@@ -1,0 +1,287 @@
+INFO    - Zephyr version: v3.0.0-rc3-51-ge2068de8c6ff
+INFO    - JOBS: 4
+DEBUG   - Reading test case configuration files under /home/maciej/zephyrproject2/zephyr/tests/kernel/threads/thread_apis...
+DEBUG   - Found possible test case in /home/maciej/zephyrproject2/zephyr/tests/kernel/threads/thread_apis
+DEBUG   - Reading platform configuration files under /home/maciej/zephyrproject2/zephyr/boards...
+DEBUG   - Reading platform configuration files under /home/maciej/zephyrproject2/zephyr/scripts/pylib/twister/boards...
+DEBUG   - Running cmake script /home/maciej/zephyrproject2/zephyr/cmake/verify-toolchain.cmake
+DEBUG   - Calling cmake with arguments: ['-DFORMAT=json', '-P', PosixPath('/home/maciej/zephyrproject2/zephyr/cmake/verify-toolchain.cmake')]
+DEBUG   - Finished running  /home/maciej/zephyrproject2/zephyr/cmake/verify-toolchain.cmake
+INFO    - Using 'zephyr' toolchain.
+DEBUG   - platform filter: ['nrf52840dk_nrf52840']
+DEBUG   -     arch_filter: None
+DEBUG   -      tag_filter: None
+DEBUG   -     exclude_tag: None
+INFO    - Building initial testcase list...
+INFO    - 2 test scenarios (2 configurations) selected, 0 configurations discarded due to filters.
+ZEPHYR_BASE unset, using "/home/maciej/zephyrproject2/zephyr"
+Renaming output directory to /home/maciej/zephyrproject2/twister-out.8
+
+Device testing on:
+
+| Platform            | ID   | Serial device   |
+|---------------------|------|-----------------|
+| nrf52840dk_nrf52840 |      | /dev/ttyACM0    |
+
+INFO    - Adding tasks to the queue...
+DEBUG   - adding nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis
+DEBUG   - adding nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis.pinonly
+INFO    - Added initial list of jobs to queue
+DEBUG   - Launch process 0
+DEBUG   - Launch process 1
+DEBUG   - Launch process 2
+DEBUG   - Launch process 3
+DEBUG   - Running cmake on /home/maciej/zephyrproject2/zephyr/tests/kernel/threads/thread_apis for nrf52840dk_nrf52840
+DEBUG   - Calling cmake with arguments: ['-B/home/maciej/zephyrproject2/twister-out/nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis.pinonly', '-S/home/maciej/zephyrproject2/zephyr/tests/kernel/threads/thread_apis', '-DEXTRA_CFLAGS=-Werror', '-DEXTRA_AFLAGS=-Werror -Wa,--fatal-warnings', '-DEXTRA_LDFLAGS=-Wl,--fatal-warnings', '-DEXTRA_GEN_DEFINES_ARGS=--edtlib-Werror', '-GNinja', '-DOVERLAY_CONFIG=/home/maciej/zephyrproject2/twister-out/nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis.pinonly/twister/testcase_extra.conf', '-DBOARD=nrf52840dk_nrf52840']
+DEBUG   - Running cmake on /home/maciej/zephyrproject2/zephyr/tests/kernel/threads/thread_apis for nrf52840dk_nrf52840
+DEBUG   - Calling cmake with arguments: ['-B/home/maciej/zephyrproject2/twister-out/nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis', '-S/home/maciej/zephyrproject2/zephyr/tests/kernel/threads/thread_apis', '-DEXTRA_CFLAGS=-Werror', '-DEXTRA_AFLAGS=-Werror -Wa,--fatal-warnings', '-DEXTRA_LDFLAGS=-Wl,--fatal-warnings', '-DEXTRA_GEN_DEFINES_ARGS=--edtlib-Werror', '-GNinja', '-DBOARD=nrf52840dk_nrf52840']
+DEBUG   - Finished building /home/maciej/zephyrproject2/zephyr/tests/kernel/threads/thread_apis for nrf52840dk_nrf52840
+DEBUG   - build test: nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis
+DEBUG   - Building /home/maciej/zephyrproject2/zephyr/tests/kernel/threads/thread_apis for nrf52840dk_nrf52840
+DEBUG   - Finished building /home/maciej/zephyrproject2/zephyr/tests/kernel/threads/thread_apis for nrf52840dk_nrf52840
+DEBUG   - filtering nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis.pinonly
+INFO    - 1/2 nrf52840dk_nrf52840       tests/kernel/threads/thread_apis/kernel.threads.apis.pinonly [33mSKIPPED[39m (filter)
+DEBUG   - run test: nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis
+DEBUG   - Using serial device /dev/ttyACM0 @ 115200 baud
+DEBUG   - Flash command: ['ninja', '-C', '/home/maciej/zephyrproject2/twister-out/nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis', 'flash']
+DEBUG   - ninja: Entering directory `/home/maciej/zephyrproject2/twister-out/nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis'
+[0/1] Flashing nrf52840dk_nrf52840
+-- west flash: rebuilding
+ninja: no work to do.
+-- west flash: using runner nrfjprog
+Using board 683205578
+-- runners.nrfjprog: Flashing file: /home/maciej/zephyrproject2/twister-out/nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis/zephyr/zephyr.hex
+Parsing image file.
+Applying system reset.
+Verified OK.
+Enabling pin reset.
+Applying pin reset.
+-- runners.nrfjprog: Board with serial number 683205578 flashed successfully.
+
+DEBUG   - DEVICE: *** Booting Zephyr OS build v3.0.0-rc3-51-ge2068de8c6ff  ***
+DEBUG   - DEVICE: Running test suite threads_lifecycle
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_thread_runtime_stats_get
+DEBUG   - DEVICE: PASS - test_thread_runtime_stats_get in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_k_thread_stack_space_get_user
+DEBUG   - DEVICE: PASS - test_k_thread_stack_space_get_user in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_spawn_params
+DEBUG   - DEVICE: PASS - test_threads_spawn_params in 0.101 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_spawn_priority
+DEBUG   - DEVICE: PASS - test_threads_spawn_priority in 0.101 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_spawn_delay
+DEBUG   - DEVICE: PASS - test_threads_spawn_delay in 0.201 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_spawn_forever
+DEBUG   - DEVICE: PASS - test_threads_spawn_forever in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_thread_start_user
+DEBUG   - DEVICE: PASS - test_thread_start_user in 0.101 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_thread_start
+DEBUG   - DEVICE: PASS - test_thread_start in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_suspend_resume_cooperative
+DEBUG   - DEVICE: PASS - test_threads_suspend_resume_cooperative in 0.201 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_suspend_resume_preemptible
+DEBUG   - DEVICE: PASS - test_threads_suspend_resume_preemptible in 0.201 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_priority_set
+DEBUG   - DEVICE: PASS - test_threads_priority_set in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_abort_self
+DEBUG   - DEVICE: PASS - test_threads_abort_self in 0.101 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_abort_others
+DEBUG   - DEVICE: PASS - test_threads_abort_others in 1.152 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_abort_repeat
+DEBUG   - DEVICE: PASS - test_threads_abort_repeat in 0.201 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_delayed_thread_abort
+DEBUG   - DEVICE: PASS - test_delayed_thread_abort in 0.51 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_essential_thread_operation
+DEBUG   - DEVICE: PASS - test_essential_thread_operation in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_essential_thread_abort
+DEBUG   - DEVICE: PASS - test_essential_thread_abort in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_systhreads_main
+DEBUG   - DEVICE: PASS - test_systhreads_main in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_systhreads_idle
+DEBUG   - DEVICE: PASS - test_systhreads_idle in 0.101 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_customdata_get_set_coop
+DEBUG   - DEVICE: PASS - test_customdata_get_set_coop in 0.501 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_customdata_get_set_preempt
+DEBUG   - DEVICE: PASS - test_customdata_get_set_preempt in 0.501 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_k_thread_foreach
+DEBUG   - DEVICE: TEST: Newly added thread found
+DEBUG   - DEVICE: TEST: tid: 0x200007a0, prio: 0
+DEBUG   - DEVICE: PASS - test_k_thread_foreach in 0.8 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_k_thread_foreach_unlocked
+DEBUG   - DEVICE: TEST_UNLOCKED: Newly added thread found
+DEBUG   - DEVICE: TEST_UNLOCKED: tid: 0x200007a0, prio: 0
+DEBUG   - DEVICE: TEST_UNLOCKED: Newly added thread in callback found
+DEBUG   - DEVICE: TEST_UNLOCKED: tid: 0x20000b40, prio: 0
+DEBUG   - DEVICE: TEST_UNLOCKED: Newly added thread found
+DEBUG   - DEVICE: TEST_UNLOCKED: tid: 0x200007a0, prio: 0
+DEBUG   - DEVICE: PASS - test_k_thread_foreach_unlocked in 0.25 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_k_thread_foreach_null_cb
+DEBUG   - DEVICE: ASSERTION FAIL [user_cb != ((void *)0)] @ WEST_TOPDIR/zephyr/kernel/thread.c:51
+DEBUG   - DEVICE: user_cb can not be NULL
+DEBUG   - DEVICE: E: r0/a1:  0x00000004  r1/a2:  0x00000033  r2/a3:  0x00000001
+DEBUG   - DEVICE: E: r3/a4:  0x00000000 r12/ip:  0x00000000 r14/lr:  0x0000ff01
+DEBUG   - DEVICE: E:  xpsr:  0x41000000
+DEBUG   - DEVICE: E: Faulting instruction address (r15/pc): 0x0000ff1a
+DEBUG   - DEVICE: E: >>> ZEPHYR FATAL ERROR 4: Kernel panic on CPU 0
+DEBUG   - DEVICE: E: Current thread: 0x20000d10 (test_k_thread_foreach_null_cb)
+DEBUG   - DEVICE: PASS - test_k_thread_foreach_null_cb in 0.38 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_k_thread_foreach_unlocked_null_cb
+DEBUG   - DEVICE: ASSERTION FAIL [user_cb != ((void *)0)] @ WEST_TOPDIR/zephyr/kernel/thread.c:79
+DEBUG   - DEVICE: user_cb can not be NULL
+DEBUG   - DEVICE: E: r0/a1:  0x00000004  r1/a2:  0x0000004f  r2/a3:  0x00000001
+DEBUG   - DEVICE: E: r3/a4:  0x00000000 r12/ip:  0x00000000 r14/lr:  0x0000ff01
+DEBUG   - DEVICE: E:  xpsr:  0x41000000
+DEBUG   - DEVICE: E: Faulting instruction address (r15/pc): 0x0000ff1a
+DEBUG   - DEVICE: E: >>> ZEPHYR FATAL ERROR 4: Kernel panic on CPU 0
+DEBUG   - DEVICE: E: Current thread: 0x20000d10 (test_k_thread_foreach_unlocked_)
+DEBUG   - DEVICE: PASS - test_k_thread_foreach_unlocked_null_cb in 0.38 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_k_thread_state_str
+DEBUG   - DEVICE: PASS - test_k_thread_state_str in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_thread_name_get_set
+DEBUG   - DEVICE: PASS - test_thread_name_get_set in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_thread_name_user_get_set
+DEBUG   - DEVICE: E: ***** BUS FAULT *****
+DEBUG   - DEVICE: E:   Precise data bus error
+DEBUG   - DEVICE: E:   BFAR Address: 0xfffffff0
+DEBUG   - DEVICE: E: syscall user_copy failed check: Memory region 0x20001408 (size 18) read access denied
+DEBUG   - DEVICE: E: 0x2000103c is not a valid k_thread
+DEBUG   - DEVICE: E: address is actually a k_sem
+DEBUG   - DEVICE: E: syscall z_vrfy_k_thread_name_set failed check: access denied
+DEBUG   - DEVICE: E: thread 0x20000d10 (10) does not have permission on k_thread 0x20000f48
+DEBUG   - DEVICE: E: permission bitmap
+DEBUG   - DEVICE: E: 00 08                   |..
+DEBUG   - DEVICE: E: syscall z_vrfy_k_thread_name_set failed check: access denied
+DEBUG   - DEVICE: E: syscall z_vrfy_k_thread_name_copy failed check: Memory region 0x200013e8 (size 32) write access denied
+DEBUG   - DEVICE: Main thread name is 'main'
+DEBUG   - DEVICE: PASS - test_thread_name_user_get_set in 0.57 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_user_mode
+DEBUG   - DEVICE: E: ***** MPU FAULT *****
+DEBUG   - DEVICE: E:   Data Access Violation
+DEBUG   - DEVICE: E:   MMFAR Address: 0x20000e20
+DEBUG   - DEVICE: E: r0/a1:  0x200007a0  r1/a2:  0x00000000  r2/a3:  0x00000000
+DEBUG   - DEVICE: E: r3/a4:  0x20000e18 r12/ip:  0x0000fbd1 r14/lr:  0x000007a1
+DEBUG   - DEVICE: E:  xpsr:  0x21000000
+DEBUG   - DEVICE: E: Faulting instruction address (r15/pc): 0x00008932
+DEBUG   - DEVICE: E: >>> ZEPHYR FATAL ERROR 0: CPU exception on CPU 0
+DEBUG   - DEVICE: E: Current thread: 0x200007a0 (unknown)
+DEBUG   - DEVICE: PASS - test_user_mode in 0.101 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_cpu_mask
+DEBUG   - DEVICE: PASS - test_threads_cpu_mask in 0.2 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_suspend_timeout
+DEBUG   - DEVICE: PASS - test_threads_suspend_timeout in 0.251 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_resume_unsuspend_thread
+DEBUG   - DEVICE: PASS - test_resume_unsuspend_thread in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_threads_suspend
+DEBUG   - DEVICE: PASS - test_threads_suspend in 0.101 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_thread_join
+DEBUG   - DEVICE: ztest_thread: method 0, create join_thread
+DEBUG   - DEVICE: ztest_thread: joining join_thread
+DEBUG   - DEVICE: join_thread: sleeping forever
+DEBUG   - DEVICE: ztest_thread: k_thread_join() returned with -11
+DEBUG   - DEVICE: ztest_thread: method 1, create join_thread
+DEBUG   - DEVICE: ztest_thread: joining join_thread
+DEBUG   - DEVICE: ztest_thread: k_thread_join() returned with -16
+DEBUG   - DEVICE: ztest_thread: method 2, create join_thread
+DEBUG   - DEVICE: ztest_thread: joining join_thread
+DEBUG   - DEVICE: join_thread: self-exiting
+DEBUG   - DEVICE: ztest_thread: k_thread_join() returned with 0
+DEBUG   - DEVICE: ztest_thread: method 3, create join_thread
+DEBUG   - DEVICE: ztest_thread: create control_thread
+DEBUG   - DEVICE: ztest_thread: joining join_thread
+DEBUG   - DEVICE: join_thread: sleeping forever
+DEBUG   - DEVICE: control_thread: killing join thread
+DEBUG   - DEVICE: ztest_thread: k_thread_join() returned with 0
+DEBUG   - DEVICE: ztest_thread: method 4, create join_thread
+DEBUG   - DEVICE: ztest_thread: create control_thread
+DEBUG   - DEVICE: ztest_thread: joining join_thread
+DEBUG   - DEVICE: join_thread: sleeping forever
+DEBUG   - DEVICE: control_thread: killing join thread
+DEBUG   - DEVICE: ztest_thread: k_thread_join() returned with 0
+DEBUG   - DEVICE: ztest_thread: method 5, create join_thread
+DEBUG   - DEVICE: join_thread: self-exiting
+DEBUG   - DEVICE: ztest_thread: joining join_thread
+DEBUG   - DEVICE: ztest_thread: k_thread_join() returned with 0
+DEBUG   - DEVICE: PASS - test_thread_join in 0.189 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_thread_join_isr
+DEBUG   - DEVICE: ztest_thread: method 7, create join_thread
+DEBUG   - DEVICE: isr: joining join_thread
+DEBUG   - DEVICE: isr: k_thread_join() returned with -16
+DEBUG   - DEVICE: ztest_thread: method 6, create join_thread
+DEBUG   - DEVICE: join_thread: self-exiting
+DEBUG   - DEVICE: isr: joining join_thread
+DEBUG   - DEVICE: isr: k_thread_join() returned with 0
+DEBUG   - DEVICE: PASS - test_thread_join_isr in 0.70 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_thread_join_deadlock
+DEBUG   - DEVICE: PASS - test_thread_join_deadlock in 0.502 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_abort_from_isr
+DEBUG   - DEVICE: PASS - test_abort_from_isr in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_abort_from_isr_not_self
+DEBUG   - DEVICE: PASS - test_abort_from_isr_not_self in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_thread_timeout_remaining_expires
+DEBUG   - DEVICE: thread_expires_ticks: 192860, expect: 192858
+DEBUG   - DEVICE: PASS - test_thread_timeout_remaining_expires in 0.35 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_k_busy_wait
+DEBUG   - DEVICE: PASS - test_k_busy_wait in 0.1 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: START - test_k_busy_wait_user
+DEBUG   - DEVICE: PASS - test_k_busy_wait_user in 0.102 seconds
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: Test suite threads_lifecycle succeeded
+DEBUG   - DEVICE: ===================================================================
+DEBUG   - DEVICE: PROJECT EXECUTION SUCCESSFUL
+DEBUG   - run status: nrf52840dk_nrf52840/tests/kernel/threads/thread_apis/kernel.threads.apis passed
+INFO    - 2/2 nrf52840dk_nrf52840       tests/kernel/threads/thread_apis/kernel.threads.apis [32mPASSED[39m (device 13.363s)
+DEBUG   - running footprint_reports
+INFO    - [32m1 of 1[39m test configurations passed (100.00%), [39m0[39m failed, 1 skipped with [39m0[39m warnings in 28.15 seconds
+INFO    - In total 41 test cases were executed, 41 skipped on 1 out of total 427 platforms (0.23%)
+INFO    - [32m1[39m test configurations executed on platforms, [31m0[39m test configurations were only built.
+INFO    - Saving reports...
+INFO    - Writing xunit report /home/maciej/zephyrproject2/twister-out/twister.xml...
+INFO    - Writing xunit report /home/maciej/zephyrproject2/twister-out/twister_report.xml...
+INFO    - Run completed
+
+
+Hardware distribution summary:
+
+| Board               | ID   |   Counter |
+|---------------------|------|-----------|
+| nrf52840dk_nrf52840 |      |         1 |
