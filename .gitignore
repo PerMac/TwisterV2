@@ -62,6 +62,7 @@ dmypy.json
 
 *.log
 *.xml
+*.html
 
 # reports
 *.csv

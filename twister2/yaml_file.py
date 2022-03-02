@@ -17,8 +17,9 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class YamlTestSpecification:
-    """Test specification for yaml test"""
+    """Test specification for yaml test."""
     name: str
+    path: Path  # path to a folder where C files are stored
     tags: str = ''
     filter: str = ''
     min_flash: str = ''
@@ -33,18 +34,24 @@ class YamlTestSpecification:
 class YamlTestClass:
     """Test Function."""
 
-    def __init__(self, name, spec):
+    def __init__(self, name: str, spec: YamlTestSpecification):
+        """
+        :param name: test name
+        :param spec: test specification     
+        """
         self.name = name
         self.spec = spec
-
+    
     def __call__(self):
-        logger.info('Test execution %s', self.name)
+        """Method called by pytest when it runs test."""
+        logger.info('Test execution %s from %s', self.name, self.spec.path)
+        logger.debug(self.spec)
         assert True
 
 
 # TODO: Implement
 class YamlFunction(pytest.Function):
-    """Wraper for pytest.Function"""
+    """Wraper for pytest.Function to extend functionality"""
 
     def __init__(
         self,
@@ -71,11 +78,12 @@ class YamlFile(pytest.File):
         yaml_tests = yaml.safe_load(self.fspath.open())
         if 'tests' not in yaml_tests:
             return None
-
+        
+        # read all tests from yaml file and generate pytest test functions
         for name, spec in sorted(yaml_tests['tests'].items()):
-            spec_class = YamlTestSpecification(name, **spec)
-            yield pytest.Function.from_parent(
+            spec_class = YamlTestSpecification(name, path=Path(self.fspath).parent, **spec)
+            yield pytest.Function.from_parent(  # TODO: implement YamlFunction to replace it
                 name=name,
                 parent=self,
-                callobj=YamlTestClass(name, spec_class),
+                callobj=YamlTestClass(name, spec_class),  # callable object (test function)
             )

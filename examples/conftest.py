@@ -14,6 +14,8 @@ logging.basicConfig(
 )
 
 # list of plugins which should be loaded by pytest
+# no need to use if plugin is installed (pip install ...)
+# we can consider make a twister v2 python package
 pytest_plugins = (
     'twister2.plugin',
 )
@@ -22,12 +24,17 @@ pytest_plugins = (
 logger = logging.getLogger(__name__)
 
 
-def pytest_collection_modifyitems(session: pytest.Session, config: pytest.Config, items: list[pytest.Item]):
+def pytest_collection_modifyitems(
+    session: pytest.Session, config: pytest.Config, items: list[pytest.Item]
+):
     logger.info('Modyfing tests before run')
     selected_items = []
     deselected_items = []
 
     for item in items:
+        # example how to access test function
+        if hasattr(item.function, 'spec'):
+            logger.debug(item.function.spec)
         selected_items.append(item)
 
     if deselected_items:
