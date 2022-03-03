@@ -3,13 +3,16 @@ Plugin to generate test plan report
 """
 from __future__ import annotations
 
+import logging
 import os
 from typing import List, Protocol
 
 import pytest
 from _pytest.terminal import TerminalReporter
+from twister2.report.test_plan_csv import CsvTestPlan
+from twister2.yaml_test_class import YamlFunction
 
-from .test_plan_csv import CsvTestPlan
+logger = logging.getLogger(__name__)
 
 
 def get_suite_name(item: pytest.Item) -> str:
@@ -22,8 +25,11 @@ def get_suite_name(item: pytest.Item) -> str:
         return item.path
 
 
-def get_item_specification(item: pytest.Item) -> dict:
-    return getattr(item, 'spec', {})
+def get_tags(item: pytest.Item) -> str:
+    """Return comma separated tags."""
+    if isinstance(item, YamlFunction):
+        return ', '.join(item.function.spec.tags)
+    return ''
 
 
 class SpecReportInterface(Protocol):
@@ -57,11 +63,8 @@ class TestPlanPlugin:
     def _item_as_dict(self, item: pytest.Item) -> dict:
 
         return dict(
-            suite_name=get_suite_name(item),
-            test_name=item.name,
-            markers='',
-            tags='',
-            specification=get_item_specification(item)
+            test_name=item.nodeid,
+            tags=get_tags(item),
         )
 
     def generate(self, items: List[pytest.Item]):
