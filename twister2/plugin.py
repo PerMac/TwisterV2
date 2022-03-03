@@ -3,26 +3,21 @@ from pathlib import Path
 
 import pytest
 
-from twister2.yaml_file import YamlFile
+from twister2.report.test_plan_plugin import TestPlanPlugin
+from twister2.yaml_file_parser import YamlFile
 
-from .report.test_plan_plugin import TestPlanPlugin
+SAMPLE_FILENAME: str = 'sample.yaml'
+TESTCASE_FILENAME: str = 'testcase.yaml'
 
 logger = logging.getLogger(__name__)
 
 
-# @pytest.fixture(scope='module')
-# def dut(request: pytest.FixtureRequest):
-#     logger.info('Dut fixture...')
-#     logger.info(request.config.args)
-#     return dict(name='dut1')
-
-
 def pytest_collect_file(parent, path):
-    if path.basename in ("sample.yaml", 'testcase.yaml'):
+    if path.basename in (SAMPLE_FILENAME, TESTCASE_FILENAME):
         return YamlFile.from_parent(parent, path=Path(path))
 
 
-def pytest_addoption(parser):
+def pytest_addoption(parser: pytest.Parser):
     custom_reports = parser.getgroup('Twister reports')
     custom_reports.addoption(
         '--testplan',
@@ -34,7 +29,7 @@ def pytest_addoption(parser):
     )
 
 
-def pytest_configure(config):
+def pytest_configure(config: pytest.Config):
     # configure TestPlan plugin
     testplan_path = config.getoption('testplan_path')
     if testplan_path and not hasattr(config, 'workerinput'):
