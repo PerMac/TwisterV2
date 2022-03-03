@@ -13,7 +13,7 @@ from _pytest.compat import NOTSET
 logger = logging.getLogger(__name__)
 
 
-@dataclass(frozen=True)
+@dataclass
 class YamlTestSpecification:
     """Test specification for yaml test."""
     name: str  #: test case name
