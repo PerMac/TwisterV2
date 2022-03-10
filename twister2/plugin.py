@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from twister2.config import TwisterConfig
 from twister2.report.test_plan_plugin import TestPlanPlugin
 from twister2.yaml_file_parser import YamlFile
 
@@ -13,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def pytest_collect_file(parent, path):
+    # discovers all yaml tests in test directory
     if path.basename in (SAMPLE_FILENAME, TESTCASE_FILENAME):
         return YamlFile.from_parent(parent, path=Path(path))
 
@@ -28,6 +30,14 @@ def pytest_addoption(parser: pytest.Parser):
         help='generate csv containing test metadata'
     )
 
+    twister_group = parser.getgroup('Twister')
+    twister_group.addoption(
+        '--build-only',
+        default=False,
+        action='store_true',
+        help='build only'
+    )
+
 
 def pytest_configure(config: pytest.Config):
     # configure TestPlan plugin
@@ -37,3 +47,4 @@ def pytest_configure(config: pytest.Config):
             plugin=TestPlanPlugin(logfile=testplan_path, config=config),
             name='testplan'
         )
+    config.twister_config = TwisterConfig(config)

@@ -1,5 +1,7 @@
 """
 Yaml test implementation.
+
+https://docs.pytest.org/en/6.2.x/example/nonpython.html
 """
 from __future__ import annotations
 
@@ -85,7 +87,6 @@ class YamlTestClass:
         :param spec: test specification     
         :param description: test description (docstring)
         """
-        # self.name = name
         self.spec = spec
         self.__doc__ = description
 
@@ -97,4 +98,5 @@ class YamlTestClass:
 
     @pytest.hookimpl(tryfirst=True)
     def pytest_generate_tests(self, metafunc):
+        # https://docs.pytest.org/en/6.2.x/example/parametrize.html#parametrizing-tests
         logger.debug('metafunc = %s', metafunc)
