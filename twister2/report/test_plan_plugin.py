@@ -15,20 +15,33 @@ from twister2.yaml_test_class import YamlFunction
 logger = logging.getLogger(__name__)
 
 
-def get_suite_name(item: pytest.Item) -> str:
+def get_test_name(item: pytest.Item) -> str:
     """Return suite name"""
     if hasattr(item, 'cls') and item.cls:
         return f'{item.module.__name__}::{item.cls.__name__}'
     elif hasattr(item, 'module') and hasattr(item.module, '__name__'):
         return f'{item.module.__name__}'
-    else:
-        return item.path
+    elif isinstance(item, YamlFunction):
+        return item.function.spec.name
+    return ''
 
 
-def get_tags(item: pytest.Item) -> str:
+def get_item_type(item: pytest.Item) -> str:
+    if isinstance(item, YamlFunction):
+        return item.function.spec.type
+    return ''
+
+
+def get_item_platform_allow(item: pytest.Item) -> str:
+    if isinstance(item, YamlFunction):
+        return ' '.join(item.function.spec.platform_allow)
+    return ''
+
+
+def get_item_tags(item: pytest.Item) -> str:
     """Return comma separated tags."""
     if isinstance(item, YamlFunction):
-        return ', '.join(item.function.spec.tags)
+        return ' '.join(item.function.spec.tags)
     return ''
 
 
@@ -63,19 +76,22 @@ class TestPlanPlugin:
     def _item_as_dict(self, item: pytest.Item) -> dict:
 
         return dict(
-            test_name=item.nodeid,
-            tags=get_tags(item),
+            suite_name=item.nodeid,
+            test_name=get_test_name(item),
+            tags=get_item_tags(item),
+            type=get_item_type(item),
+            platform_allow=get_item_platform_allow(item),
         )
 
-    def generate(self, items: List[pytest.Item]):
+    def generate(self, items: List[pytest.Item]) -> list[dict]:
         """Build test plan and save."""
-        rows = [self._item_as_dict(item) for item in items]
-        self._save_report(rows)
+        return [self._item_as_dict(item) for item in items]
 
     @pytest.hookimpl(tryfirst=True)
     def pytest_collection_modifyitems(self, session: pytest.Session, config: pytest.Config, items: list[pytest.Item]):
         if config.getoption('testplan_path'):
-            self.generate(items)
+            data = self.generate(items)
+            self._save_report(data)
 
     def pytest_terminal_summary(self, terminalreporter: TerminalReporter) -> None:
         # print summary to terminal

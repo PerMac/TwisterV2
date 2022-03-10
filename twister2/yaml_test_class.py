@@ -20,33 +20,35 @@ class YamlTestSpecification:
     """Test specification for yaml test."""
     name: str  #: test case name
     path: Path  #: path to a folder where C files are stored
-    tags: set = field(default=set)
+    tags: set = field(default_factory=set)
     type: str = 'integration'
     filter: str = ''
     min_flash: int = 32
-    arch_allow: set = field(default=set)
-    arch_exclude: set = field(default=set)
+    arch_allow: set = field(default_factory=set)
+    arch_exclude: set = field(default_factory=set)
     build_only: bool = False
     build_on_all: bool = False
     skip: bool = False
     slow: bool = False
     timeout: int = 60
     min_ram: int = 8
-    depends_on: set = field(default=set)
+    depends_on: set = field(default_factory=set)
     harness: str = ''
-    extra_sections: list = field(default=list)
-    extra_configs: list[str] = field(default=list)
-    extra_args: list[str] = field(default=list)
-    integration_platforms: list = field(default=list)
-    platform_allow: set = field(default=set)
-    platform_exclude: set = field(default=set)
-    harness_config: dict = field(default=dict)
-    toolchain_exclude: set = field(default=set)
-    toolchain_allow: set = field(default=set)
+    extra_sections: list = field(default_factory=list)
+    extra_configs: list[str] = field(default_factory=list)
+    extra_args: list[str] = field(default_factory=list)
+    integration_platforms: list = field(default_factory=list)
+    platform_allow: set = field(default_factory=set)
+    platform_exclude: set = field(default_factory=set)
+    harness_config: dict = field(default_factory=dict)
+    toolchain_exclude: set = field(default_factory=set)
+    toolchain_allow: set = field(default_factory=set)
 
     def __post_init__(self):
         if isinstance(self.tags, str):
             self.tags = self.tags.split(' ')
+        if isinstance(self.platform_allow, str):
+            self.platform_allow = self.platform_allow.split(' ')
 
 
 class YamlFunction(pytest.Function):
