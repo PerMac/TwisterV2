@@ -1,3 +1,6 @@
+"""
+Filter implementation to filter twister tests by platform.
+"""
 from __future__ import annotations
 
 import pytest
@@ -9,9 +12,19 @@ class PlatformFilter:
     """Filter tests by platform"""
 
     def __init__(self, twister_config: TwisterConfig) -> None:
-        self.selected_platforms: set = set(twister_config.platform)
+        """
+        :param twister_config: twister configuration
+        """
+        #: list of platforms selected from commandline 
+        self.selected_platforms: set[str] = set(twister_config.platform)
 
     def filter(self, items: list[pytest.Item]) -> tuple[list[pytest.Item], list[pytest.Item]]:
+        """
+        Filter list of items and return two list with selected and deselected items.
+        
+        :param items: list of pytest items
+        :return: tuple with selected and deselected items
+        """
         selected_items = []
         deselected_items = []
 
@@ -25,8 +38,9 @@ class PlatformFilter:
                 selected_items.append(item)  # we don't filter other tests
         return selected_items, deselected_items
 
-    def _should_run(self, item) -> bool:
-        platform_allow: set = set(item.function.spec.platform_allow)
+    def _should_run(self, item: pytest.Item) -> bool:
+        """Return if item should be select to execution."""
+        platform_allow: set[str] = set(item.function.spec.platform_allow)
         if platform_allow & self.selected_platforms:
             return True
         else:
