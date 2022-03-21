@@ -1,25 +1,30 @@
 """
 Simple class to generate test plan report in CSV format
 """
+import logging
 import csv
 import os
 
 
-class CsvTestPlan:
+logger = logging.getLogger(__name__)
 
-    def __init__(self, filename: str):
+
+class CsvTestPlan:
+    """Create test plan report as CSV file."""
+
+    def __init__(self, filename: str, delimiter: str = ',', quotechar: str = '"'):
         """
         :param filename: output file name
+        :param: delimiter:
+        :param quotechar:
         """
         self.filename = filename
-        self.delimiter = ','
-        self.quotechar = '"'
-
-    def build(self, data: list) -> list:
-        return data
+        self.delimiter = delimiter
+        self.quotechar = quotechar
 
     def write(self, data: list) -> None:
         if not data:
+            logger.warning('No data to generate test plan')
             return
 
         os.makedirs(os.path.dirname(self.filename), exist_ok=True)
@@ -34,4 +39,3 @@ class CsvTestPlan:
             )
             writer.writeheader()
             writer.writerows(data)
-            
