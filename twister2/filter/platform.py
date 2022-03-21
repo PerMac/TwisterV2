@@ -29,8 +29,8 @@ class PlatformFilter:
         :param items: list of pytest items
         :return: tuple with selected and deselected items
         """
-        selected_items = []
-        deselected_items = []
+        selected_items: list[pytest.Item] = []
+        deselected_items: list[pytest.Item] = []
 
         # if platform is not selected then run all tests
         if not self.selected_platforms:

@@ -33,16 +33,12 @@ class TestPlanPlugin:
         self,
         logfile: str,
         config: pytest.Config,
-        spec_report_class: SpecReportInterface | None = None
+        writer: SpecReportInterface
     ):
         logfile = os.path.expanduser(os.path.expandvars(logfile))
         self.logfile = os.path.normpath(os.path.abspath(logfile))
         self.config = config
-        if spec_report_class:
-            writer = spec_report_class(self.logfile)
-        else:
-            writer = CsvTestPlan(self.logfile)
-        self.writer: SpecReportInterface = writer
+        self.writer = writer
         os.makedirs(os.path.dirname(self.logfile), exist_ok=True)
 
     def _item_as_dict(self, item: pytest.Item) -> dict:
