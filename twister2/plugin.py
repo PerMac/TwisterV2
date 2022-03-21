@@ -52,7 +52,7 @@ def pytest_configure(config: pytest.Config):
     testplan_path = config.getoption('testplan_path')
     if testplan_path and not hasattr(config, 'workerinput'):
         config.pluginmanager.register(
-            plugin=TestPlanPlugin(logfile=testplan_path, config=config, writer=CsvTestPlan(testplan_path)),
+            plugin=TestPlanPlugin(logfile=testplan_path, config=config, writers=CsvTestPlan(testplan_path)),
             name='testplan'
         )
     config.twister_config = TwisterConfig(config)
