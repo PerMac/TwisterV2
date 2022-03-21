@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from twister2.config import TwisterConfig
+from twister2.config import DEFAULT_PLATFORMS, TwisterConfig
 from twister2.filter.filter_pluggin import FilterPlugging
 from twister2.report.test_plan_plugin import TestPlanPlugin
 from twister2.yaml_file_parser import YamlFile
@@ -40,7 +40,7 @@ def pytest_addoption(parser: pytest.Parser):
     )
     twister_group.addoption(
         '--platform',
-        default='',
+        default=DEFAULT_PLATFORMS,
         action='store',
         help='filter test with platform'
     )
@@ -57,4 +57,4 @@ def pytest_configure(config: pytest.Config):
     config.twister_config = TwisterConfig(config)
 
     # register filter plugin
-    config.pluginmanager.register(plugin=FilterPlugging(config), name='filter plugin')
+    # config.pluginmanager.register(plugin=FilterPlugging(config), name='filter plugin')

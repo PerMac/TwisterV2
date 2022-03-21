@@ -6,49 +6,21 @@ https://docs.pytest.org/en/6.2.x/example/nonpython.html
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass, field
-from pathlib import Path
 
 import pytest
-from _pytest.compat import NOTSET
+
+from twister2.yaml_test_specification import YamlTestSpecification
 
 logger = logging.getLogger(__name__)
 
 
-@dataclass
-class YamlTestSpecification:
-    """Test specification for yaml test."""
-    name: str  #: test case name
-    path: Path  #: path to a folder where C files are stored
-    tags: set = field(default_factory=set)
-    type: str = 'integration'
-    filter: str = ''
-    min_flash: int = 32
-    arch_allow: set = field(default_factory=set)
-    arch_exclude: set = field(default_factory=set)
-    build_only: bool = False
-    build_on_all: bool = False
-    skip: bool = False
-    slow: bool = False
-    timeout: int = 60
-    min_ram: int = 8
-    depends_on: set = field(default_factory=set)
-    harness: str = ''
-    extra_sections: list = field(default_factory=list)
-    extra_configs: list[str] = field(default_factory=list)
-    extra_args: list[str] = field(default_factory=list)
-    integration_platforms: list = field(default_factory=list)
-    platform_allow: set = field(default_factory=set)
-    platform_exclude: set = field(default_factory=set)
-    harness_config: dict = field(default_factory=dict)
-    toolchain_exclude: set = field(default_factory=set)
-    toolchain_allow: set = field(default_factory=set)
-
-    def __post_init__(self):
-        if isinstance(self.tags, str):
-            self.tags = self.tags.split(' ')
-        if isinstance(self.platform_allow, str):
-            self.platform_allow = self.platform_allow.split(' ')
+def yaml_test_function_factory(spec, parent) -> YamlFunction:
+    """Generate test function."""
+    return YamlFunction.from_parent(
+        name=spec.name,
+        parent=parent,
+        callobj=YamlTestClass(spec),  # callable object (test function)
+    )
 
 
 class YamlFunction(pytest.Function):
@@ -86,19 +58,21 @@ class YamlTestClass:
     def __init__(self, spec: YamlTestSpecification, description: str = ''):
         """
         :param name: test name
-        :param spec: test specification     
+        :param spec: test specification
         :param description: test description (docstring)
         """
         self.spec = spec
         self.__doc__ = description
 
-    def __call__(self):
+    def __call__(self, subtests, *args, **kwargs):
         """Method called by pytest when it runs test."""
         logger.info('Test execution %s from %s', self.spec.name, self.spec.path)
         logger.debug(self.spec)
-        assert True
+        # https://pypi.org/project/pytest-subtests/
+        # from .log_parser import LogParser
+        # sub_tests = LogParser(open(r'zephyr_logs/threads_lifecycle.log')).parse_logs()
+        # for i, test in enumerate(sub_tests):
+        #     with subtests.test(msg=test.testname, i=i):
+        #         assert test.result != 'PASS'
 
-    @pytest.hookimpl(tryfirst=True)
-    def pytest_generate_tests(self, metafunc):
-        # https://docs.pytest.org/en/6.2.x/example/parametrize.html#parametrizing-tests
-        logger.debug('metafunc = %s', metafunc)
+        # assert True
