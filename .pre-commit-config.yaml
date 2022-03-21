@@ -14,6 +14,12 @@ repos:
         stages: [ commit ]
         args: ["--profile", "black", "--filter-files"]
 
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: trailing-whitespace
+      - id: double-quote-string-fixer
+
   # - repo: https://github.com/pre-commit/mirrors-mypy
     # rev: 'v0.931'
     # hooks:
