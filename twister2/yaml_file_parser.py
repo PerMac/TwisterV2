@@ -5,7 +5,6 @@ Base of non-python test definition:
 https://github.com/pytest-dev/pytest/issues/3639
 """
 import logging
-from functools import partial
 from pathlib import Path
 from typing import Generator
 
@@ -55,15 +54,15 @@ def _generate_test_variants_for_platforms(spec: dict, twister_config: TwisterCon
 
 def _read_test_specifications_from_yaml(filepath: Path, twister_config: TwisterConfig) -> Generator[YamlTestSpecification, None, None]:
     """
-    Return list of specification for tests.
+    Return generator of yaml test specifications.
 
     :param filepath: path to a yaml file
     :param twister_config: twister configuration
-    :return: list of yaml test specification
+    :return: generator of yaml test specifications
     """
     yaml_tests: dict = yaml.safe_load(filepath.open())
     if not yaml_tests.get('tests'):
-        return []
+        yield from []  # return empty generator
 
     sample = yaml_tests.get('sample', {})
     common = yaml_tests.get('common', {})
