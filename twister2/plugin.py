@@ -4,7 +4,6 @@ from pathlib import Path
 import pytest
 
 from twister2.config import DEFAULT_PLATFORMS, TwisterConfig
-from twister2.filter.filter_pluggin import FilterPlugging
 from twister2.report.test_plan_csv import CsvTestPlan
 from twister2.report.test_plan_plugin import TestPlanPlugin
 from twister2.yaml_file_parser import YamlFile
@@ -52,7 +51,7 @@ def pytest_configure(config: pytest.Config):
     testplan_path = config.getoption('testplan_path')
     if testplan_path and not hasattr(config, 'workerinput'):
         config.pluginmanager.register(
-            plugin=TestPlanPlugin(logfile=testplan_path, config=config, writer=CsvTestPlan(testplan_path)),
+            plugin=TestPlanPlugin(config=config, writers=[CsvTestPlan(testplan_path)]),
             name='testplan'
         )
     config.twister_config = TwisterConfig(config)

@@ -5,12 +5,12 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import List, Protocol
+from typing import List, Protocol, Union
 
 import pytest
 from _pytest.terminal import TerminalReporter
-from twister2.report.test_plan_csv import CsvTestPlan
-from twister2.yaml_test_class import YamlFunction
+from twister2.report.helper import (get_item_platform_allow, get_item_tags,
+                                    get_item_type, get_test_name)
 
 logger = logging.getLogger(__name__)
 
@@ -26,20 +26,19 @@ class TestPlanPlugin:
     Generate TestPlan as CSV.
 
     :param logfile: output filename
-    :param config: pytest._Config
+    :param config: pytest.Config
+    :param writers:
     """
 
     def __init__(
         self,
-        logfile: str,
         config: pytest.Config,
-        writer: SpecReportInterface
+        writers: Union[SpecReportInterface, list[SpecReportInterface]]
     ):
-        logfile = os.path.expanduser(os.path.expandvars(logfile))
-        self.logfile = os.path.normpath(os.path.abspath(logfile))
         self.config = config
-        self.writer = writer
-        os.makedirs(os.path.dirname(self.logfile), exist_ok=True)
+        if not isinstance(writers, list):
+            writers = [writers]
+        self.writers = writers
 
     def _item_as_dict(self, item: pytest.Item) -> dict:
 
@@ -64,39 +63,9 @@ class TestPlanPlugin:
     def pytest_terminal_summary(self, terminalreporter: TerminalReporter) -> None:
         # print summary to terminal
         terminalreporter.ensure_newline()
-        terminalreporter.write_sep('-', f'generated testplan file: {self.logfile}', green=True)
+        for writer in self.writers:
+            terminalreporter.write_sep('-', f'generated testplan file: {writer.filename}', green=True)
 
     def _save_report(self, report_content: List[dict]) -> None:
-        self.writer.write(report_content)
-
-
-def get_test_name(item: pytest.Item) -> str:
-    """Return suite name."""
-    if hasattr(item, 'cls') and item.cls:
-        return f'{item.module.__name__}::{item.cls.__name__}'
-    elif hasattr(item, 'module') and hasattr(item.module, '__name__'):
-        return f'{item.module.__name__}'
-    elif isinstance(item, YamlFunction):
-        return item.function.spec.name
-    return ''
-
-
-def get_item_type(item: pytest.Item) -> str:
-    """Return test type."""
-    if isinstance(item, YamlFunction):
-        return item.function.spec.type
-    return ''
-
-
-def get_item_platform_allow(item: pytest.Item) -> str:
-    """Return allowed platforms."""
-    if isinstance(item, YamlFunction):
-        return ' '.join(item.function.spec.platform_allow)
-    return ''
-
-
-def get_item_tags(item: pytest.Item) -> str:
-    """Return comma separated tags."""
-    if isinstance(item, YamlFunction):
-        return ' '.join(item.function.spec.tags)
-    return ''
+        for writer in self.writers:
+            writer.write(report_content)

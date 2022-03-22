@@ -8,11 +8,13 @@ import pytest
 
 sys.path.append(str(Path(__file__).parents[1]))
 
+from twister2.helper import is_yaml_test
 
 logging.basicConfig(
     level=logging.DEBUG,
     filename='test.log',
     filemode='w',
+    format='%(levelname)-8s:%(name)s: %(message)s'
 )
 
 # list of plugins which should be loaded by pytest
@@ -35,9 +37,10 @@ def pytest_collection_modifyitems(
 
     for item in items:
         # example how to access test function
-        if hasattr(item.function, 'spec'):
-            logger.debug(item.function.spec)
-        selected_items.append(item)
+        if is_yaml_test(item):
+            selected_items.append(item)
+        else:
+            deselected_items.append(item)
 
     if deselected_items:
         config.hook.pytest_deselected(items=deselected_items)
@@ -46,4 +49,9 @@ def pytest_collection_modifyitems(
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_runtest_setup(item: pytest.Item) -> None:
-    logger.info('setup item %s', repr(item))
+    logger.info('Setup item %s', repr(item))
+
+
+def pytest_generate_tests(metafunc):
+    # does not work with yaml tests!
+    logger.debug('metafunc = %s', metafunc.function.__name__)
