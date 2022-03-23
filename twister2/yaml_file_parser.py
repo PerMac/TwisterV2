@@ -12,7 +12,7 @@ import pytest
 import yaml
 
 from twister2.config import TwisterConfig
-from twister2.yaml_test_class import YamlFunction, yaml_test_function_factory
+from twister2.yaml_test_class import YamlTestFunction, yaml_test_function_factory
 from twister2.yaml_test_specification import YamlTestSpecification
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ class YamlFile(pytest.File):
         twister_config = self.config.twister_config
         # read all tests from yaml file and generate pytest test functions
         for spec in _read_test_specifications_from_yaml(self.fspath, twister_config):
-            test_function: YamlFunction = yaml_test_function_factory(spec=spec, parent=self)
+            test_function: YamlTestFunction = yaml_test_function_factory(spec=spec, parent=self)
             # extend xml report
             test_function.user_properties.append(('tags', ' '.join(spec.tags)))
             test_function.user_properties.append(('platform', spec.platform))
@@ -38,18 +38,21 @@ def _generate_test_variants_for_platforms(spec: dict, twister_config: TwisterCon
     assert isinstance(twister_config, TwisterConfig)
     spec = spec.copy()
     selected_platforms = twister_config.platforms
-    logger.debug('Generating tests for selected platforms %s', selected_platforms)
 
     allowed_platform = spec.get('allowed_platform', '').split() or selected_platforms
     platform_exclude = spec.get('platform_exclude', '').split()
     test_name = spec['name']
+
+    logger.debug('Generating tests for %s with selected platforms %s', test_name, selected_platforms)
 
     for platform in allowed_platform:
         if platform in platform_exclude:
             continue
         spec['name'] = test_name + f'[{platform}]'
         spec['platform'] = platform
-        yield YamlTestSpecification(**spec)
+        yaml_test_spec = YamlTestSpecification(**spec)
+        logger.debug('Generated: %s', yaml_test_spec)
+        yield yaml_test_spec
 
 
 def _read_test_specifications_from_yaml(filepath: Path, twister_config: TwisterConfig) -> Generator[YamlTestSpecification, None, None]:

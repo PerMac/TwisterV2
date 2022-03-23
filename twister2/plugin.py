@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 # include fixtures
 pytest_plugins = (
     'twister2.fixtures.builder',
+    'twister2.fixtures.log_parser',
 )
 
 

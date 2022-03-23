@@ -2,6 +2,7 @@ import logging
 
 import pytest
 
+# hardcoder for PoC
 DEFAULT_PLATFORMS: str = 'qemu_cortex_m3 qemu_x86 nrf51dk_nrf51422'
 
 logger = logging.getLogger(__name__)

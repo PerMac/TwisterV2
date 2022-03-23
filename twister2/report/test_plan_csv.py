@@ -1,15 +1,28 @@
 """
 Simple class to generate test plan report in CSV format
 """
-import logging
+import abc
 import csv
+import logging
 import os
-
 
 logger = logging.getLogger(__name__)
 
 
-class CsvTestPlan:
+class BaseWritter(abc.ABC):
+
+    @staticmethod
+    def _normalize_logfile_path(filename: str) -> str:
+        filename = os.path.expanduser(os.path.expandvars(filename))
+        filename = os.path.normpath(os.path.abspath(filename))
+        return filename
+
+    @abc.abstractmethod
+    def write(self, data: list) -> None:
+        """Save report."""
+
+
+class CsvTestPlan(BaseWritter):
     """Create test plan report as CSV file."""
 
     def __init__(self, filename: str, delimiter: str = ',', quotechar: str = '"'):
@@ -18,7 +31,7 @@ class CsvTestPlan:
         :param: delimiter:
         :param quotechar:
         """
-        self.filename = filename
+        self.filename = self._normalize_logfile_path(filename)
         self.delimiter = delimiter
         self.quotechar = quotechar
 
@@ -28,7 +41,7 @@ class CsvTestPlan:
             return
 
         os.makedirs(os.path.dirname(self.filename), exist_ok=True)
-        with open(self.filename, 'w', newline='') as fd:
+        with open(self.filename, 'w', encoding='UTF-8', newline='') as fd:
             fieldnames = list(data[0].keys())
             writer = csv.DictWriter(
                 fd,
