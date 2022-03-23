@@ -13,6 +13,11 @@ TESTCASE_FILENAME: str = 'testcase.yaml'
 
 logger = logging.getLogger(__name__)
 
+# include fixtures
+pytest_plugins = (
+    'twister2.fixtures.builder',
+)
+
 
 def pytest_collect_file(parent, path):
     # discovers all yaml tests in test directory
