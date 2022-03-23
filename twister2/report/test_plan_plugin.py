@@ -67,6 +67,6 @@ class TestPlanPlugin:
         for writer in self.writers:
             terminalreporter.write_sep('-', f'generated testplan file: {writer.filename}', green=True)
 
-    def _save_report(self, report_content: List[dict]) -> None:
+    def _save_report(self, data: List[dict]) -> None:
         for writer in self.writers:
-            writer.write(report_content)
+            writer.write(data)

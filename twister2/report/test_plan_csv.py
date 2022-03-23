@@ -1,25 +1,13 @@
 """
 Simple class to generate test plan report in CSV format
 """
-import abc
 import csv
 import logging
 import os
 
+from twister2.report.base_report_writer import BaseWritter
+
 logger = logging.getLogger(__name__)
-
-
-class BaseWritter(abc.ABC):
-
-    @staticmethod
-    def _normalize_logfile_path(filename: str) -> str:
-        filename = os.path.expanduser(os.path.expandvars(filename))
-        filename = os.path.normpath(os.path.abspath(filename))
-        return filename
-
-    @abc.abstractmethod
-    def write(self, data: list) -> None:
-        """Save report."""
 
 
 class CsvTestPlan(BaseWritter):
