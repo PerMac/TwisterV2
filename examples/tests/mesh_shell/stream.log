@@ -101,7 +101,7 @@ DEBUG   - DEVICE: START - test_threads_abort_others
 DEBUG   - DEVICE: PASS - test_threads_abort_others in 1.152 seconds
 DEBUG   - DEVICE: ===================================================================
 DEBUG   - DEVICE: START - test_threads_abort_repeat
-DEBUG   - DEVICE: PASS - test_threads_abort_repeat in 0.201 seconds
+DEBUG   - DEVICE: FAIL - test_threads_abort_repeat in 0.201 seconds
 DEBUG   - DEVICE: ===================================================================
 DEBUG   - DEVICE: START - test_delayed_thread_abort
 DEBUG   - DEVICE: PASS - test_delayed_thread_abort in 0.51 seconds
