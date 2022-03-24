@@ -1,10 +1,10 @@
 import json
 import os
 
-from twister2.report.base_report_writer import BaseWritter
+from twister2.report.base_report_writer import BaseReportWriter
 
 
-class JsonResultsReport(BaseWritter):
+class JsonResultsReport(BaseReportWriter):
     """Write Json report"""
 
     def __init__(self, filename: str):

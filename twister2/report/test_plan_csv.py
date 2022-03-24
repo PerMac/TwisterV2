@@ -5,12 +5,12 @@ import csv
 import logging
 import os
 
-from twister2.report.base_report_writer import BaseWritter
+from twister2.report.base_report_writer import BaseReportWriter
 
 logger = logging.getLogger(__name__)
 
 
-class CsvTestPlan(BaseWritter):
+class CsvTestPlan(BaseReportWriter):
     """Create test plan report as CSV file."""
 
     def __init__(self, filename: str, delimiter: str = ';', quotechar: str = '"'):

@@ -2,12 +2,12 @@ import json
 import logging
 import os
 
-from twister2.report.base_report_writer import BaseWritter
+from twister2.report.base_report_writer import BaseReportWriter
 
 logger = logging.getLogger(__name__)
 
 
-class JsonTestPlan(BaseWritter):
+class JsonTestPlan(BaseReportWriter):
 
     def __init__(self, filename: str) -> None:
         self.filename = self._normalize_logfile_path(filename)

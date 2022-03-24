@@ -2,7 +2,7 @@ import abc
 import os
 
 
-class BaseWritter(abc.ABC):
+class BaseReportWriter(abc.ABC):
 
     @staticmethod
     def _normalize_logfile_path(filename: str) -> str:

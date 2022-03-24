@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from twister2.config import DEFAULT_PLATFORMS, TwisterConfig
-from twister2.report.json_results_report import JsonResultsReport
+from twister2.report.test_results_json import JsonResultsReport
 from twister2.report.test_plan_csv import CsvTestPlan
 from twister2.report.test_plan_json import JsonTestPlan
 from twister2.report.test_plan_plugin import TestPlanPlugin
