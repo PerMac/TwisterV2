@@ -1,26 +1,38 @@
-import logging
+from __future__ import annotations
 
+import logging
+from dataclasses import dataclass, asdict, field
+from typing import Any
 import pytest
 
-# hardcoder for PoC
+# hardcoded for PoC
 DEFAULT_PLATFORMS: str = 'qemu_cortex_m3 qemu_x86 nrf51dk_nrf51422'
 
 logger = logging.getLogger(__name__)
 
 
-# TODO: replace by dataclass and add factory method to build from pytest.Config
+@dataclass
 class TwisterConfig:
     """Store twister configuration to have easy access in test."""
+    build_only: bool = False
+    platforms: list = field(default_factory=list)
 
-    def __init__(self, config: pytest.Config):
-        self.build_only: bool = config.getoption('--build-only')
-        platforms = config.getoption('--platform')
-        if ',' in platforms:
-            platforms = platforms.split(',')
+    @classmethod
+    def create(cls, config: pytest.Config) -> TwisterConfig:
+        """Create new instance from pytest.Config."""
+        build_only: bool = config.getoption('--build-only')
+        platforms_string: str = config.getoption('--platform')
+        if ',' in platforms_string:
+            platforms = platforms_string.split(',')
         else:
-            platforms = platforms.split()
-        self.platforms: list = platforms
-        logger.debug('TwisterConfiguration: %s', self)
+            platforms = platforms_string.split()
 
-    def __str__(self):
-        return f'{self.__class__.__name__}<build_only={self.build_only}, platform={self.platforms}>'
+        data: dict[str, Any] = dict(
+            build_only=build_only,
+            platforms=platforms,
+        )
+        logger.debug('TwisterConfiguration: %s', data)
+        return cls(**data)
+
+    def asdict(self) -> dict:
+        return asdict(self)
