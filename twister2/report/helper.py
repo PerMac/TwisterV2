@@ -8,10 +8,8 @@ def get_suite_name(item: pytest.Item) -> str:
         return f'{item.module.__name__}::{item.cls.__name__}'
     elif hasattr(item, 'module') and hasattr(item.module, '__name__'):
         return f'{item.module.__name__}'
-    elif isinstance(item, YamlTestFunction):
-        # TODO: define what is suite to yaml test
-        return item.parent.nodeid
-    return item.parent.nodeid
+    else:
+        return item.parent.nodeid.replace('/', '.').replace('\\', '.')
 
 
 def get_test_name(item: pytest.Item) -> str:
