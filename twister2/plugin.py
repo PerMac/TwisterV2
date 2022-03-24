@@ -4,9 +4,11 @@ from pathlib import Path
 import pytest
 
 from twister2.config import DEFAULT_PLATFORMS, TwisterConfig
+from twister2.report.json_results_report import JsonResultsReport
 from twister2.report.test_plan_csv import CsvTestPlan
 from twister2.report.test_plan_json import JsonTestPlan
 from twister2.report.test_plan_plugin import TestPlanPlugin
+from twister2.report.test_results_plugin import TestResultsPlugin
 from twister2.yaml_file_parser import YamlFile
 
 SAMPLE_FILENAME: str = 'sample.yaml'
@@ -45,6 +47,14 @@ def pytest_addoption(parser: pytest.Parser):
         default=None,
         help='generate test plan in JSON format'
     )
+    custom_reports.addoption(
+        '--results-json',
+        dest='results_json_path',
+        metavar='path',
+        action='store',
+        default=None,
+        help='generate test results report in JSON format'
+    )
 
     twister_group = parser.getgroup('Twister')
     twister_group.addoption(
@@ -75,7 +85,14 @@ def pytest_configure(config: pytest.Config):
             name='testplan'
         )
 
-    config.twister_config = TwisterConfig(config)
+    test_results_writers = []
+    if test_result_json_path := config.getoption('results_json_path'):
+        test_results_writers.append(JsonResultsReport(test_result_json_path))
 
-    # register filter plugin
-    # config.pluginmanager.register(plugin=FilterPlugging(config), name='filter plugin')
+    if test_results_writers and not hasattr(config, 'workerinput') and not config.option.collectonly:
+        config.pluginmanager.register(
+            plugin=TestResultsPlugin(config, writers=test_results_writers),
+            name='test-results'
+        )
+
+    config.twister_config = TwisterConfig.create(config)
