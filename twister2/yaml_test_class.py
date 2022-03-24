@@ -26,7 +26,7 @@ def yaml_test_function_factory(spec: YamlTestSpecification, parent: Any) -> Yaml
 
 
 class YamlTestFunction(pytest.Function):
-    """Wraper for pytest.Function to extend functionality"""
+    """Wrapper for pytest.Function to extend functionality"""
 
     def setup(self) -> None:
         """Setup test function."""
@@ -51,7 +51,7 @@ class YamlTestClass:
         self.spec = spec
         self.__doc__ = description
 
-    def __call__(self, subtests, log_parser: LogParser, *args, **kwargs):
+    def __call__(self, subtests, log_parser: LogParser, builder, *args, **kwargs):
         """Method called by pytest when it runs test."""
         logger.info('Execution test %s from %s', self.spec.name, self.spec.path)
 

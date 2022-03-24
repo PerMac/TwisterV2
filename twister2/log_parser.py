@@ -6,8 +6,7 @@ from __future__ import annotations
 import logging
 import re
 from dataclasses import asdict, dataclass
-from email.generator import Generator
-from typing import Iterator
+from typing import Iterator, Generator
 
 RUN_PASSED: str = 'PROJECT EXECUTION SUCCESSFUL'
 RUN_FAILED: str = 'PROJECT EXECUTION FAILED'
@@ -26,7 +25,7 @@ logger = logging.getLogger(__name__)
 class TestResult:
     testname: str
     result: str
-    duration: int
+    duration: float
 
     def __post_init__(self):
         if isinstance(self.duration, str):

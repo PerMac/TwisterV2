@@ -36,6 +36,6 @@ class YamlTestSpecification:
 
     def __post_init__(self):
         if isinstance(self.tags, str):
-            self.tags = self.tags.split(' ')
+            self.tags = set(self.tags.split(' '))
         if isinstance(self.platform_allow, str):
-            self.platform_allow = self.platform_allow.split(' ')
+            self.platform_allow = set(self.platform_allow.split(' '))

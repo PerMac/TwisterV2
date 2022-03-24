@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class CsvTestPlan(BaseWritter):
     """Create test plan report as CSV file."""
 
-    def __init__(self, filename: str, delimiter: str = ',', quotechar: str = '"'):
+    def __init__(self, filename: str, delimiter: str = ';', quotechar: str = '"'):
         """
         :param filename: output file name
         :param: delimiter:

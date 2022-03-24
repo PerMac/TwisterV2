@@ -12,7 +12,9 @@ from twister2.report.helper import (
     get_item_platform_allow,
     get_item_tags,
     get_item_type,
+    get_suite_name,
     get_test_name,
+    get_test_path,
 )
 
 logger = logging.getLogger(__name__)
@@ -22,7 +24,6 @@ class SpecReportInterface(Protocol):
     def write(self, data: list[dict]) -> None: ...
 
 
-# FIXME: does not work with pytest-xdist, needs some refactoring
 class TestPlanPlugin:
     """Generate TestPlan as CSV."""
 
@@ -43,8 +44,9 @@ class TestPlanPlugin:
     def _item_as_dict(self, item: pytest.Item) -> dict:
         """Return test metadata as dictionary."""
         return dict(
-            suite_name=item.nodeid,
+            suite_name=get_suite_name(item),
             test_name=get_test_name(item),
+            path=get_test_path(item),
             tags=get_item_tags(item),
             type=get_item_type(item),
             platform_allow=get_item_platform_allow(item),
@@ -55,11 +57,12 @@ class TestPlanPlugin:
         return [self._item_as_dict(item) for item in items]
 
     @pytest.hookimpl(tryfirst=True)
-    def pytest_collection_modifyitems(self, session: pytest.Session, config: pytest.Config, items: list[pytest.Item]):
+    def pytest_collection_modifyitems(
+        self, session: pytest.Session, config: pytest.Config, items: list[pytest.Item]
+    ):
         # generate test plan and save
-        if config.getoption('testplan_path'):
-            data = self.generate(items)
-            self._save_report(data)
+        data = self.generate(items)
+        self._save_report(data)
 
     def pytest_terminal_summary(self, terminalreporter: TerminalReporter) -> None:
         # print summary to terminal

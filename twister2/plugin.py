@@ -30,8 +30,8 @@ def pytest_collect_file(parent, path):
 def pytest_addoption(parser: pytest.Parser):
     custom_reports = parser.getgroup('Twister reports')
     custom_reports.addoption(
-        '--testplan',
-        dest='testplan_path',
+        '--testplan-csv',
+        dest='testplan_csv_path',
         metavar='path',
         action='store',
         default=None,
@@ -57,14 +57,14 @@ def pytest_addoption(parser: pytest.Parser):
         '--platform',
         default=DEFAULT_PLATFORMS,
         action='store',
-        help='filter test with platform'
+        help='build tests for specific platforms'
     )
 
 
 def pytest_configure(config: pytest.Config):
     # configure TestPlan plugin
     test_plan_writers = []
-    if testplan_csv_path := config.getoption('testplan_path'):
+    if testplan_csv_path := config.getoption('testplan_csv_path'):
         test_plan_writers.append(CsvTestPlan(testplan_csv_path))
     if testplan_json_path := config.getoption('testplan_json_path'):
         test_plan_writers.append(JsonTestPlan(testplan_json_path))
