@@ -18,10 +18,10 @@ def test_twister_help(yaml_test):
     print(result.stdout)
     result.stdout.fnmatch_lines_random([
         '*Twister reports:*',
-        '*--testplan=path*generate csv containing test metadata*',
+        '* --testplan-csv=path*generate test plan in CSV format*',
         '*Twister:*',
         '*--build-only*build only*',
-        '*--platform=PLATFORM*filter test with platform*',
+        '*--platform=PLATFORM*build tests for specific platforms*',
     ])
 
 
@@ -29,7 +29,7 @@ def test_twister(yaml_test):
     testplan_file = TEST_DIR / 'twister.csv'
     result = yaml_test.runpytest(
         '-v',
-        f'--testplan={str(testplan_file.resolve())}',
+        f'--testplan-csv={str(testplan_file.resolve())}',
     )
     print(result.stdout)
     result.assert_outcomes(passed=3)
