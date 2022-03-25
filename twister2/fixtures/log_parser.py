@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 from twister2.log_parser import LogParser
-from twister2.yaml_test_class import YamlTestClass
+from twister2.yaml_test_function import YamlTestCase
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 @pytest.fixture(scope='function')
 def log_parser(request: pytest.FixtureRequest) -> LogParser | None:
     """Return log parser."""
-    if not isinstance(request.function, YamlTestClass):
+    if not isinstance(request.function, YamlTestCase):
         yield
 
     # mocked log stream

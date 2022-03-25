@@ -46,7 +46,7 @@ class LogParser:
     def parse(self) -> Generator[TestResult, None, None] | None:
         """Parse logs and return list of tests with statuses."""
         for line in self.stream:
-            if RUN_FAILED in line or FAULT in line:
+            if RUN_FAILED in line:
                 logger.error('PROJECT EXECUTION FAILED')
                 break
             if FAULT in line:
