@@ -51,7 +51,6 @@ def _generate_test_variants_for_platforms(
         if platform in platform_exclude:
             continue
         spec['name'] = test_name + f'[{platform}]'
-        spec['original_name'] = test_name
         spec['platform'] = platform
         yaml_test_spec = YamlTestSpecification(**spec)
         logger.debug('Generated: %s', yaml_test_spec)
