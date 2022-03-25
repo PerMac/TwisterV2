@@ -1,6 +1,6 @@
 import pytest
 
-from twister2.yaml_test_class import YamlTestFunction
+from twister2.yaml_test_function import YamlTestFunction
 
 
 def is_yaml_test(item: pytest.Item) -> bool:

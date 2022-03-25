@@ -12,7 +12,7 @@ import pytest
 import yaml
 
 from twister2.config import TwisterConfig
-from twister2.yaml_test_class import YamlTestFunction, yaml_test_function_factory
+from twister2.yaml_test_function import YamlTestFunction, yaml_test_function_factory
 from twister2.yaml_test_specification import YamlTestSpecification
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,9 @@ class YamlFile(pytest.File):
             yield test_function
 
 
-def _generate_test_variants_for_platforms(spec: dict, twister_config: TwisterConfig) -> Generator[YamlTestSpecification, None, None]:
+def _generate_test_variants_for_platforms(
+    spec: dict, twister_config: TwisterConfig
+) -> Generator[YamlTestSpecification, None, None]:
     """Generate test variants according to provided platforms."""
     assert isinstance(twister_config, TwisterConfig)
     spec = spec.copy()
@@ -55,7 +57,9 @@ def _generate_test_variants_for_platforms(spec: dict, twister_config: TwisterCon
         yield yaml_test_spec
 
 
-def _read_test_specifications_from_yaml(filepath: Path, twister_config: TwisterConfig) -> Generator[YamlTestSpecification, None, None]:
+def _read_test_specifications_from_yaml(
+    filepath: Path, twister_config: TwisterConfig
+) -> Generator[YamlTestSpecification, None, None]:
     """
     Return generator of yaml test specifications.
 
@@ -67,7 +71,7 @@ def _read_test_specifications_from_yaml(filepath: Path, twister_config: TwisterC
     if not yaml_tests.get('tests'):
         yield from []  # return empty generator
 
-    sample = yaml_tests.get('sample', {})
+    sample = yaml_tests.get('sample', {})  # exists in yaml but it is not used
     common = yaml_tests.get('common', {})
     common['path'] = Path(filepath).parent
 

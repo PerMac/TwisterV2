@@ -9,7 +9,7 @@ from twister2.report.test_plan_csv import CsvTestPlan
 from twister2.report.test_plan_json import JsonTestPlan
 from twister2.report.test_plan_plugin import TestPlanPlugin
 from twister2.report.test_results_plugin import TestResultsPlugin
-from twister2.yaml_file_parser import YamlFile
+from twister2.yaml_file import YamlFile
 
 SAMPLE_FILENAME: str = 'sample.yaml'
 TESTCASE_FILENAME: str = 'testcase.yaml'

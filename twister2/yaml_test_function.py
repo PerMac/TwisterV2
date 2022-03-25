@@ -1,6 +1,9 @@
 """
 Yaml test implementation.
 
+Module creates pytest test function representing Zypher C tests.
+
+Base on pytest non-python test example:
 https://docs.pytest.org/en/6.2.x/example/nonpython.html
 """
 from __future__ import annotations
@@ -21,12 +24,12 @@ def yaml_test_function_factory(spec: YamlTestSpecification, parent: Any) -> Yaml
     return YamlTestFunction.from_parent(
         name=spec.name,
         parent=parent,
-        callobj=YamlTestClass(spec),  # callable object (test function)
+        callobj=YamlTestCase(spec),  # callable object (test function)
     )
 
 
 class YamlTestFunction(pytest.Function):
-    """Wrapper for pytest.Function to extend functionality"""
+    """Wrapper for pytest.Function to extend functionality."""
 
     def setup(self) -> None:
         """Setup test function."""
@@ -40,8 +43,8 @@ class YamlTestFunction(pytest.Function):
         return super().teardown()
 
 
-class YamlTestClass:
-    """Callable class representing test."""
+class YamlTestCase:
+    """Callable class representing yaml test."""
 
     def __init__(self, spec: YamlTestSpecification, description: str = ''):
         """
@@ -51,7 +54,7 @@ class YamlTestClass:
         self.spec = spec
         self.__doc__ = description
 
-    def __call__(self, subtests, log_parser: LogParser, builder, *args, **kwargs):
+    def __call__(self, subtests, dut, log_parser: LogParser, builder, *args, **kwargs):
         """Method called by pytest when it runs test."""
         logger.info('Execution test %s from %s', self.spec.name, self.spec.path)
 
@@ -65,3 +68,9 @@ class YamlTestClass:
 
             with subtests.test(msg=test.testname, i=i):
                 assert test.result == 'PASS', f'Subtest {test.testname} failed'
+
+        # log_parser.register_event("Running test suite threads_lifecycle")
+        # log_parser.register_event("")
+        # for subtest in self.spec.subtests:
+        #     log_parser.register_event_in_any_order(TestPassed(subtest))
+        # log_parser.wait_for_events(events, timeout=30)
