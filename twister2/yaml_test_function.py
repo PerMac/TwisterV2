@@ -54,7 +54,7 @@ class YamlTestCase:
         self.spec = spec
         self.__doc__ = description
 
-    def __call__(self, subtests, dut, log_parser: LogParser, builder, *args, **kwargs):
+    def __call__(self, subtests, log_parser: LogParser, builder, *args, **kwargs):
         """Method called by pytest when it runs test."""
         logger.info('Execution test %s from %s', self.spec.name, self.spec.path)
 
