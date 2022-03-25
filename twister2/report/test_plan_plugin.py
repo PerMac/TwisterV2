@@ -4,10 +4,12 @@ Plugin to generate test plan report
 from __future__ import annotations
 
 import logging
-from typing import List, Protocol, Union
+from typing import List, Union
 
 import pytest
 from _pytest.terminal import TerminalReporter
+
+from twister2.report.base_report_writer import BaseReportWriter
 from twister2.report.helper import (
     get_item_platform_allow,
     get_item_tags,
@@ -20,17 +22,13 @@ from twister2.report.helper import (
 logger = logging.getLogger(__name__)
 
 
-class SpecReportInterface(Protocol):
-    def write(self, data: list[dict]) -> None: ...
-
-
 class TestPlanPlugin:
     """Generate TestPlan as CSV."""
 
     def __init__(
         self,
         config: pytest.Config,
-        writers: Union[SpecReportInterface, list[SpecReportInterface]]
+        writers: Union[BaseReportWriter, list[BaseReportWriter]]
     ):
         """
         :param config: pytest.Config
@@ -52,9 +50,10 @@ class TestPlanPlugin:
             platform_allow=get_item_platform_allow(item),
         )
 
-    def generate(self, items: List[pytest.Item]) -> list[dict]:
+    def generate(self, items: List[pytest.Item]) -> dict:
         """Build test plan"""
-        return [self._item_as_dict(item) for item in items]
+        tests = [self._item_as_dict(item) for item in items]
+        return dict(tests=tests)
 
     @pytest.hookimpl(tryfirst=True)
     def pytest_collection_modifyitems(
@@ -70,6 +69,6 @@ class TestPlanPlugin:
         for writer in self.writers:
             terminalreporter.write_sep('-', f'generated testplan file: {writer.filename}', green=True)
 
-    def _save_report(self, data: List[dict]) -> None:
+    def _save_report(self, data: dict) -> None:
         for writer in self.writers:
             writer.write(data)

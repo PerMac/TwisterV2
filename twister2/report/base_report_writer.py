@@ -11,5 +11,5 @@ class BaseReportWriter(abc.ABC):
         return filename
 
     @abc.abstractmethod
-    def write(self, data: list) -> None:
+    def write(self, data: dict) -> None:
         """Save report."""

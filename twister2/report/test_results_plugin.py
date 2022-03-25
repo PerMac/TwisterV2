@@ -14,6 +14,7 @@ from twister2.report.helper import (
     get_suite_name,
     get_test_name,
 )
+from twister2.report.base_report_writer import BaseReportWriter
 
 PASSED = 'Passed'
 XPASSED = 'XPassed'
@@ -64,7 +65,7 @@ class TestResult:
 class TestResultsPlugin:
     """Class collects results and crates result report."""
 
-    def __init__(self, config: pytest.Config, writers: list):
+    def __init__(self, config: pytest.Config, writers: list[BaseReportWriter]):
         """
         :param config: pytest configuration
         :param writers: list of report writers

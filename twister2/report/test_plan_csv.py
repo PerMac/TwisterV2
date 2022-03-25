@@ -23,14 +23,14 @@ class CsvTestPlan(BaseReportWriter):
         self.delimiter = delimiter
         self.quotechar = quotechar
 
-    def write(self, data: list) -> None:
+    def write(self, data: dict) -> None:
         if not data:
             logger.warning('No data to generate test plan')
             return
-
+        tests = data['tests']
         os.makedirs(os.path.dirname(self.filename), exist_ok=True)
         with open(self.filename, 'w', encoding='UTF-8', newline='') as fd:
-            fieldnames = list(data[0].keys())
+            fieldnames = list(tests[0].keys())
             writer = csv.DictWriter(
                 fd,
                 fieldnames=fieldnames,
@@ -39,4 +39,4 @@ class CsvTestPlan(BaseReportWriter):
                 quoting=csv.QUOTE_MINIMAL
             )
             writer.writeheader()
-            writer.writerows(data)
+            writer.writerows(tests)
