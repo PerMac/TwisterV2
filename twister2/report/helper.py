@@ -1,5 +1,5 @@
 import pytest
-from twister2.yaml_test_class import YamlTestFunction
+from twister2.yaml_test_function import YamlTestFunction
 
 
 def get_suite_name(item: pytest.Item) -> str:

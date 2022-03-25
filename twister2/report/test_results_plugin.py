@@ -16,13 +16,13 @@ from twister2.report.helper import (
 )
 from twister2.report.base_report_writer import BaseReportWriter
 
-PASSED = 'Passed'
-XPASSED = 'XPassed'
-FAILED = 'Failed'
-XFAILED = 'XFailed'
-ERROR = 'Error'
-SKIPPED = 'Skipped'
-RERUN = 'Rerun'
+PASSED = 'passed'
+XPASSED = 'xpassed'
+FAILED = 'failed'
+XFAILED = 'xfailed'
+ERROR = 'error'
+SKIPPED = 'skipped'
+RERUN = 'rerun'
 
 
 class TestResult:
@@ -31,7 +31,8 @@ class TestResult:
     def __init__(self, outcome: str, report: pytest.TestReport, config: pytest.Config):
         self.test_id: str = report.nodeid.encode(
             'utf-8').decode('unicode_escape'
-                            )
+        )
+        self.nodeid = report.nodeid
         self.name: str = self.test_id
         if getattr(report, 'when', 'call') != 'call':
             self.test_id = '::'.join([report.nodeid, report.when])
@@ -72,7 +73,7 @@ class TestResultsPlugin:
         """
         self.config = config
         self.writers = writers
-        self.counter = Counter(passed=0, failed=0, skipped=0, xfailed=0, xpassed=0, errors=0)
+        self.counter = Counter(passed=0, failed=0, skipped=0, xfailed=0, xpassed=0, error=0)
         self.test_results: dict[str, TestResult] = {}
         self.items: dict[str, pytest.Item] = {}
 
@@ -80,7 +81,7 @@ class TestResultsPlugin:
     def pytest_runtest_makereport(self, item: pytest.Item, call):
         outcome = yield
         report = outcome.get_result()
-        if report.when == 'call':
+        if item.nodeid not in self.items:
             self.items[item.nodeid] = item
 
     def pytest_runtest_logreport(self, report: pytest.TestReport):
@@ -113,7 +114,7 @@ class TestResultsPlugin:
     def _get_outcome(self, report: pytest.TestReport) -> str | None:
         if report.failed:
             if report.when != 'call':
-                return FAILED
+                return ERROR
             elif hasattr(report, 'wasxfail'):
                 return XPASSED
             else:
@@ -130,12 +131,12 @@ class TestResultsPlugin:
         """Return rendered report as string"""
         tests_list: list = []
         for result in self.test_results.values():
-            item = self.items.get(result.test_id)
+            item = self.items.get(result.nodeid)
 
             if not item:
                 continue
 
-            self.counter[result.status.lower()] += 1
+            self.counter[result.status] += 1
 
             test = dict(
                 suite_name=get_suite_name(item),
