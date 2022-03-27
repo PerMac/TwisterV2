@@ -29,6 +29,13 @@ def get_item_type(item: pytest.Item) -> str:
     return ''
 
 
+def get_item_platform(item: pytest.Item) -> str:
+    """Return test platform."""
+    if isinstance(item, YamlTestFunction):
+        return item.function.spec.platform
+    return ''
+
+
 def get_item_platform_allow(item: pytest.Item) -> str:
     """Return allowed platforms."""
     if isinstance(item, YamlTestFunction):

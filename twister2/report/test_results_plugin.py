@@ -7,22 +7,25 @@ from collections import Counter
 import pytest
 from pytest_subtests import SubTestReport
 
+from twister2.report.base_report_writer import BaseReportWriter
 from twister2.report.helper import (
     get_item_platform_allow,
     get_item_tags,
     get_item_type,
     get_suite_name,
     get_test_name,
+    get_item_platform
 )
-from twister2.report.base_report_writer import BaseReportWriter
 
-PASSED = 'passed'
-XPASSED = 'xpassed'
-FAILED = 'failed'
-XFAILED = 'xfailed'
-ERROR = 'error'
-SKIPPED = 'skipped'
-RERUN = 'rerun'
+
+class Status:
+    PASSED = 'passed'
+    XPASSED = 'xpassed'
+    FAILED = 'failed'
+    XFAILED = 'xfailed'
+    ERROR = 'error'
+    SKIPPED = 'skipped'
+    RERUN = 'rerun'
 
 
 class TestResult:
@@ -50,13 +53,13 @@ class TestResult:
 
     def add_subtest(self, subtest):
         order = (
-            PASSED,
-            SKIPPED,
-            XPASSED,
-            XFAILED,
-            RERUN,
-            FAILED,
-            ERROR,
+            Status.PASSED,
+            Status.SKIPPED,
+            Status.XPASSED,
+            Status.XFAILED,
+            Status.RERUN,
+            Status.FAILED,
+            Status.ERROR,
         )
         status = order[max(order.index(self.status), order.index(subtest['status']))]
         self.status = status
@@ -75,14 +78,6 @@ class TestResultsPlugin:
         self.writers = writers
         self.counter = Counter(passed=0, failed=0, skipped=0, xfailed=0, xpassed=0, error=0)
         self.test_results: dict[str, TestResult] = {}
-        self.items: dict[str, pytest.Item] = {}
-
-    @pytest.hookimpl(tryfirst=True, hookwrapper=True)
-    def pytest_runtest_makereport(self, item: pytest.Item, call):
-        outcome = yield
-        report = outcome.get_result()
-        if item.nodeid not in self.items:
-            self.items[item.nodeid] = item
 
     def pytest_runtest_logreport(self, report: pytest.TestReport):
         outcome = self._get_outcome(report)
@@ -108,30 +103,32 @@ class TestResultsPlugin:
     def pytest_terminal_summary(self, terminalreporter):
         for writer in self.writers:
             terminalreporter.write_sep(
-                '-', f'generated results report file: {writer.filename}'
+                '-', f'generated results report file: {writer.filename}', green=True
             )
 
     def _get_outcome(self, report: pytest.TestReport) -> str | None:
         if report.failed:
             if report.when != 'call':
-                return ERROR
+                return Status.ERROR
             elif hasattr(report, 'wasxfail'):
-                return XPASSED
+                return Status.XPASSED
             else:
-                return FAILED
+                return Status.FAILED
         elif report.skipped:
             if hasattr(report, 'wasxfail'):
-                return XFAILED
+                return Status.XFAILED
             else:
-                return SKIPPED
+                return Status.SKIPPED
         elif report.passed and report.when == 'call':
-            return PASSED
+            return Status.PASSED
 
     def _generate_report(self, session: pytest.Session) -> dict:
         """Return rendered report as string"""
         tests_list: list = []
+        items: dict[str, pytest.Item] = {item.nodeid: item for item in session.items}
+
         for result in self.test_results.values():
-            item = self.items.get(result.nodeid)
+            item = items.get(result.nodeid)
 
             if not item:
                 continue
@@ -142,6 +139,7 @@ class TestResultsPlugin:
                 suite_name=get_suite_name(item),
                 test_name=get_test_name(item),
                 nodeid=item.nodeid,
+                platform=get_item_platform(item),
                 tags=get_item_tags(item),
                 type=get_item_type(item),
                 platform_allow=get_item_platform_allow(item),
@@ -156,10 +154,10 @@ class TestResultsPlugin:
         environment = dict(
             report_time=time.strftime('%H:%M:%S %d-%m-%Y'),
             pc_name=platform.node() or 'N/A',
+            duration=duration,
         )
         summary = dict(self.counter)
         summary['total'] = sum(self.counter.values())
-        summary['duration'] = duration
 
         return dict(
             environment=environment,
