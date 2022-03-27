@@ -68,9 +68,3 @@ class YamlTestCase:
 
             with subtests.test(msg=test.testname, i=i):
                 assert test.result == 'PASS', f'Subtest {test.testname} failed'
-
-        # log_parser.register_event("Running test suite threads_lifecycle")
-        # log_parser.register_event("")
-        # for subtest in self.spec.subtests:
-        #     log_parser.register_event_in_any_order(TestPassed(subtest))
-        # log_parser.wait_for_events(events, timeout=30)
