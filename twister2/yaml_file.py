@@ -4,6 +4,8 @@ Module is responsible for searching and parsing yaml files, and generating test 
 Base of non-python test definition:
 https://github.com/pytest-dev/pytest/issues/3639
 """
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 from typing import Generator
@@ -73,13 +75,43 @@ def _read_test_specifications_from_yaml(
 
     sample = yaml_tests.get('sample', {})  # exists in yaml but it is not used
     common = yaml_tests.get('common', {})
-    common['path'] = Path(filepath).parent
 
     for test_name, spec in yaml_tests['tests'].items():
         test_name: str
         spec: dict
-        spec['name'] = test_name
+
+        for key, value in spec.items():
+            common_value = common.pop(key, None)
+            if not common_value:
+                continue
+            if key == 'filter':
+                spec[key] = _join_filters([spec[key], common_value])
+                continue
+            if isinstance(value, str):
+                spec[key] = _join_strings([spec[key], common_value])
+                continue
+            if isinstance(value, list):
+                spec[key] = spec[key] + common_value
+                continue
+
         spec.update(common)
+        spec['name'] = test_name
+        spec['path'] = Path(filepath).parent
 
         for test_spec in _generate_test_variants_for_platforms(spec, twister_config):
             yield test_spec
+
+
+def _join_filters(args: list[str]) -> str:
+    assert all(isinstance(arg, str) for arg in args)
+    if len(args) == 1:
+        return args[0]
+    args = [f'({arg})' for arg in args if args]
+    return ' and '.join(args)
+
+
+def _join_strings(args: list[str]) -> str:
+    assert all(isinstance(arg, str) for arg in args)
+    # remove empty strings
+    args = [arg for arg in args if args]
+    return ' '.join(args)
