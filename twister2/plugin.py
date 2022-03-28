@@ -1,18 +1,26 @@
 import logging
 from pathlib import Path
+import os
 
 import pytest
-
-from twister2.config import DEFAULT_PLATFORMS, TwisterConfig
-from twister2.report.test_results_json import JsonResultsReport
+from twister2.config import TwisterConfig, discover_platforms
 from twister2.report.test_plan_csv import CsvTestPlan
 from twister2.report.test_plan_json import JsonTestPlan
 from twister2.report.test_plan_plugin import TestPlanPlugin
+from twister2.report.test_results_json import JsonResultsReport
 from twister2.report.test_results_plugin import TestResultsPlugin
 from twister2.yaml_file import YamlFile
 
 SAMPLE_FILENAME: str = 'sample.yaml'
 TESTCASE_FILENAME: str = 'testcase.yaml'
+ZEPHYR_BASE = os.environ.get('ZEPHYR_BASE')  # TODO: raise an exception if not set
+# Directory to search for board configuration files. All .yaml
+# files in the directory will be processed. The directory should have the same
+# structure in the main Zephyr tree: boards/<arch>/<board_name>/
+board_root_list = [
+    f'{ZEPHYR_BASE}/boards',
+    f'{ZEPHYR_BASE}/scripts/pylib/twister/boards',
+]
 
 logger = logging.getLogger(__name__)
 
@@ -65,9 +73,14 @@ def pytest_addoption(parser: pytest.Parser):
     )
     twister_group.addoption(
         '--platform',
-        default=DEFAULT_PLATFORMS,
-        action='store',
+        action='append',
         help='build tests for specific platforms'
+    )
+    twister_group.addoption(
+        '--board-root',
+        action='append',
+        default=board_root_list,
+        help='directory to search for board configuration files'
     )
 
 
@@ -94,5 +107,12 @@ def pytest_configure(config: pytest.Config):
             plugin=TestResultsPlugin(config, writers=test_results_writers),
             name='test-results'
         )
+
+    board_root = config.getoption('board_root')
+    default_platforms: list[str] = []
+    for directory in board_root:
+        for platform_config in discover_platforms(Path(directory)):
+            default_platforms.append(platform_config.identifier)
+    config._default_platforms = default_platforms
 
     config.twister_config = TwisterConfig.create(config)
