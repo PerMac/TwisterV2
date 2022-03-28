@@ -18,22 +18,25 @@ logger = logging.getLogger(__name__)
 class TwisterConfig:
     """Store twister configuration to have easy access in test."""
     build_only: bool = False
-    platforms: list = field(default_factory=list)
+    platforms: list[PlatformConfig] = field(default_factory=list)
+    default_platforms: list[str] = field(default_factory=list)
     board_root: list = field(default_factory=list)
 
     @classmethod
     def create(cls, config: pytest.Config) -> TwisterConfig:
         """Create new instance from pytest.Config."""
         build_only: bool = config.getoption('--build-only')
-        platforms: list[str] = config.getoption('--platform')
+        default_platforms: list[str] = config.getoption('--platform')
         board_root: list[str] = config.getoption('--board-root')
+        platforms = config._platforms
 
-        if not platforms:
-            platforms = config._default_platforms
+        if not default_platforms:
+            default_platforms = [platform.identifier for platform in platforms]
 
         data: dict[str, Any] = dict(
             build_only=build_only,
             platforms=platforms,
+            default_platforms=default_platforms,
             board_root=board_root,
         )
         logger.debug('TwisterConfiguration: %s', data)

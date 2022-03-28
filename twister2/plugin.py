@@ -108,11 +108,12 @@ def pytest_configure(config: pytest.Config):
             name='test-results'
         )
 
+    # load platforms
     board_root = config.getoption('board_root')
-    default_platforms: list[str] = []
+    platforms: list = []
     for directory in board_root:
         for platform_config in discover_platforms(Path(directory)):
-            default_platforms.append(platform_config.identifier)
-    config._default_platforms = default_platforms
+            platforms.append(platform_config)
+    config._platforms = platforms
 
     config.twister_config = TwisterConfig.create(config)

@@ -41,13 +41,13 @@ def _generate_test_variants_for_platforms(
     """Generate test variants according to provided platforms."""
     assert isinstance(twister_config, TwisterConfig)
     spec = spec.copy()
-    selected_platforms = twister_config.platforms
+    default_platforms = twister_config.default_platforms
 
-    allowed_platform = spec.get('allowed_platform', '').split() or selected_platforms
+    allowed_platform = spec.get('allowed_platform', '').split() or default_platforms
     platform_exclude = spec.get('platform_exclude', '').split()
     test_name = spec['name']
 
-    logger.debug('Generating tests for %s with selected platforms %s', test_name, selected_platforms)
+    logger.debug('Generating tests for %s with selected platforms %s', test_name, default_platforms)
 
     for platform in allowed_platform:
         if platform in platform_exclude:
