@@ -67,10 +67,11 @@ class PlatformConfig:
     @classmethod
     def load_from_yaml(cls, filename: str) -> PlatformConfig:
         """Load platform from yaml file."""
-        data: dict = yaml.safe_load(open(filename))
-        testing = data.pop('testing', None)
-        if testing:
-            data.update(testing)
+        with open(filename, 'r', encoding='UTF-8') as file:
+            data: dict = yaml.safe_load(file)
+            testing = data.pop('testing', None)
+            if testing:
+                data.update(testing)
         return cls(**data)
 
 
