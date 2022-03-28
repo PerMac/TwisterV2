@@ -35,7 +35,18 @@ class YamlTestSpecification:
     toolchain_allow: set = field(default_factory=set)
 
     def __post_init__(self):
-        if isinstance(self.tags, str):
-            self.tags = set(self.tags.split(' '))
-        if isinstance(self.platform_allow, str):
-            self.platform_allow = set(self.platform_allow.split(' '))
+        self.tags = _string_to_set(self.tags)
+        self.platform_allow = _string_to_set(self.platform_allow)
+        self.platform_exclude = _string_to_set(self.platform_exclude)
+        self.toolchain_exclude = _string_to_set(self.toolchain_exclude)
+        self.toolchain_allow = _string_to_set(self.toolchain_allow)
+        self.arch_allow = _string_to_set(self.arch_allow)
+        self.arch_exclude = _string_to_set(self.arch_exclude)
+        self.depends_on = _string_to_set(self.depends_on)
+
+
+def _string_to_set(value: str | set) -> set[str]:
+    if isinstance(value, str):
+        return set(value.split())
+    else:
+        return value
