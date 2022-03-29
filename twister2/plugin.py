@@ -13,7 +13,10 @@ from twister2.yaml_file import YamlFile
 
 SAMPLE_FILENAME: str = 'sample.yaml'
 TESTCASE_FILENAME: str = 'testcase.yaml'
-ZEPHYR_BASE = os.environ.get('ZEPHYR_BASE')  # TODO: raise an exception if not set
+ZEPHYR_BASE = os.environ.get('ZEPHYR_BASE')
+if not ZEPHYR_BASE:
+    raise SystemExit('ZEPHYR_BASE environment variable undefined')
+
 # Directory to search for board configuration files. All .yaml
 # files in the directory will be processed. The directory should have the same
 # structure in the main Zephyr tree: boards/<arch>/<board_name>/
