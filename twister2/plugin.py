@@ -13,17 +13,6 @@ from twister2.yaml_file import YamlFile
 
 SAMPLE_FILENAME: str = 'sample.yaml'
 TESTCASE_FILENAME: str = 'testcase.yaml'
-ZEPHYR_BASE = os.environ.get('ZEPHYR_BASE')
-if not ZEPHYR_BASE:
-    raise SystemExit('ZEPHYR_BASE environment variable undefined')
-
-# Directory to search for board configuration files. All .yaml
-# files in the directory will be processed. The directory should have the same
-# structure in the main Zephyr tree: boards/<arch>/<board_name>/
-board_root_list = [
-    f'{ZEPHYR_BASE}/boards',
-    f'{ZEPHYR_BASE}/scripts/pylib/twister/boards',
-]
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +34,7 @@ def pytest_addoption(parser: pytest.Parser):
     custom_reports.addoption(
         '--testplan-csv',
         dest='testplan_csv_path',
-        metavar='path',
+        metavar='PATH',
         action='store',
         default=None,
         help='generate test plan in CSV format'
@@ -53,7 +42,7 @@ def pytest_addoption(parser: pytest.Parser):
     custom_reports.addoption(
         '--testplan-json',
         dest='testplan_json_path',
-        metavar='path',
+        metavar='PATH',
         action='store',
         default=None,
         help='generate test plan in JSON format'
@@ -61,7 +50,7 @@ def pytest_addoption(parser: pytest.Parser):
     custom_reports.addoption(
         '--results-json',
         dest='results_json_path',
-        metavar='path',
+        metavar='PATH',
         action='store',
         default=None,
         help='generate test results report in JSON format'
@@ -81,13 +70,40 @@ def pytest_addoption(parser: pytest.Parser):
     )
     twister_group.addoption(
         '--board-root',
+        metavar='PATH',
         action='append',
-        default=board_root_list,
+        default=None,
         help='directory to search for board configuration files'
+    )
+    parser.addini(
+        'board_root',
+        type='pathlist',
+        help='directories to search for Zephyr board configuration files',
+    )
+    twister_group.addoption(
+        '--zephyr-base',
+        metavar='path',
+        action='store',
+        default=None,
+        help='base directory for Zephyr'
+    )
+    parser.addini(
+        'zephyr_base',
+        type='string',
+        help='base directory for Zephyr',
     )
 
 
 def pytest_configure(config: pytest.Config):
+    if config.getoption('help'):
+        return
+
+    zephyr_base = config.getoption('zephyr_base') or config.getini('zephyr_base') or os.environ.get('ZEPHYR_BASE')
+    if not zephyr_base:
+        pytest.exit(
+            'Path to Zephyr directory must be provided as pytest argument or in environment variable: ZEPHYR_BASE'
+        )
+
     # configure TestPlan plugin
     test_plan_writers = []
     if testplan_csv_path := config.getoption('testplan_csv_path'):
@@ -112,9 +128,16 @@ def pytest_configure(config: pytest.Config):
         )
 
     # load platforms
-    board_root = config.getoption('board_root')
+    board_root_list = config.getoption('board_root') or config.getini('board_root')
+    zephyr_base = config.getoption('zephyr_base') or config.getini('zephyr_base') or os.environ.get('ZEPHYR_BASE')
+    if not board_root_list:
+        board_root_list = [
+            f'{zephyr_base}/boards',
+            f'{zephyr_base}/scripts/pylib/twister/boards',
+        ]
+
     platforms: list = []
-    for directory in board_root:
+    for directory in board_root_list:
         for platform_config in discover_platforms(Path(directory)):
             platforms.append(platform_config)
     config._platforms = platforms
