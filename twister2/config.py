@@ -43,7 +43,12 @@ class TwisterConfig:
         return cls(**data)
 
     def asdict(self) -> dict:
-        return asdict(self)
+        """Return dictionary which can be serialized as Json."""
+        return dict(
+            build_only=self.build_only,
+            default_platforms=self.default_platforms,
+            board_root=self.board_root
+        )
 
 
 @dataclass
