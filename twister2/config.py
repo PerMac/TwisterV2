@@ -90,3 +90,17 @@ def discover_platforms(directory: Path) -> Generator[PlatformConfig, None, None]
         except Exception as e:
             logger.exception('Cannot read platform definition from yaml: %e', e)
             raise
+
+
+def validate_platforms_list(platforms: list[PlatformConfig]) -> None:
+    """Validate platforms."""
+    # varify duplications
+    duplicated: list[str] = []
+    platforms_list: list[str] = []
+    for platform in platforms:
+        if platform.identifier in platforms_list:
+            duplicated.append(platform.identifier)
+        else:
+            platforms_list.append(platform.identifier)
+    if len(duplicated) != 0:
+        pytest.exit(f'There are duplicated platforms: {", ".join(duplicated)}')

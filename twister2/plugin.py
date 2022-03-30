@@ -3,7 +3,7 @@ from pathlib import Path
 import os
 
 import pytest
-from twister2.config import TwisterConfig, discover_platforms
+from twister2.config import TwisterConfig, discover_platforms, validate_platforms_list
 from twister2.report.test_plan_csv import CsvTestPlan
 from twister2.report.test_plan_json import JsonTestPlan
 from twister2.report.test_plan_plugin import TestPlanPlugin
@@ -146,6 +146,7 @@ def pytest_configure(config: pytest.Config):
     for directory in board_root_list:
         for platform_config in discover_platforms(Path(directory)):
             platforms.append(platform_config)
+    validate_platforms_list(platforms)
     config._platforms = platforms
 
     config.twister_config = TwisterConfig.create(config)
