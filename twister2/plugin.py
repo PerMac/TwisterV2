@@ -139,6 +139,9 @@ def pytest_configure(config: pytest.Config):
             f'{zephyr_base}/scripts/pylib/twister/boards',
         ]
 
+    logger.debug('ZEPHYR_BASE: %s', zephyr_base)
+    logger.debug('BOARD_ROOT_LIST: %s', board_root_list)
+
     platforms: list = []
     for directory in board_root_list:
         for platform_config in discover_platforms(Path(directory)):
