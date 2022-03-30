@@ -39,7 +39,6 @@ class TwisterConfig:
             default_platforms=default_platforms,
             board_root=board_root,
         )
-        logger.debug('TwisterConfiguration: %s', data)
         return cls(**data)
 
     def asdict(self) -> dict:
