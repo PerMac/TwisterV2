@@ -64,7 +64,9 @@ class YamlTestCase:
         # using subtests fixture to log single C test
         # https://pypi.org/project/pytest-subtests/
         for i, test in enumerate(log_parser.parse()):
-            logger.debug('Subtest status: %s', test)
+            logger.info('Subtest status: %s', test)
 
             with subtests.test(msg=test.testname, i=i):
                 assert test.result == 'PASS', f'Subtest {test.testname} failed'
+
+        assert log_parser.state == 'PASSED', 'Project execution failed'
