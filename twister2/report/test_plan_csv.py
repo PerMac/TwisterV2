@@ -24,7 +24,7 @@ class CsvTestPlan(BaseReportWriter):
         self.quotechar = quotechar
 
     def write(self, data: dict) -> None:
-        if not data:
+        if not data or not data.get('tests'):
             logger.warning('No data to generate test plan')
             return
         tests = data['tests']
