@@ -10,6 +10,7 @@ from twister2.report.test_plan_plugin import TestPlanPlugin
 from twister2.report.test_results_json import JsonResultsReport
 from twister2.report.test_results_plugin import TestResultsPlugin
 from twister2.yaml_file import YamlFile
+from twister2.helper import configure_logging
 
 SAMPLE_FILENAME: str = 'sample.yaml'
 TESTCASE_FILENAME: str = 'testcase.yaml'
@@ -103,6 +104,8 @@ def pytest_configure(config: pytest.Config):
         pytest.exit(
             'Path to Zephyr directory must be provided as pytest argument or in environment variable: ZEPHYR_BASE'
         )
+
+    configure_logging(config)
 
     # configure TestPlan plugin
     test_plan_writers = []
