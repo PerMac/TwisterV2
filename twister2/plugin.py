@@ -3,7 +3,8 @@ from pathlib import Path
 import os
 
 import pytest
-from twister2.config import TwisterConfig, discover_platforms, validate_platforms_list
+from twister2.twister_config import TwisterConfig
+from twister2.platform_specification import discover_platforms, validate_platforms_list
 from twister2.report.test_plan_csv import CsvTestPlan
 from twister2.report.test_plan_json import JsonTestPlan
 from twister2.report.test_plan_plugin import TestPlanPlugin
@@ -132,7 +133,6 @@ def pytest_configure(config: pytest.Config):
 
     # load platforms
     board_root_list = config.getoption('board_root') or config.getini('board_root')
-    zephyr_base = config.getoption('zephyr_base') or config.getini('zephyr_base') or os.environ.get('ZEPHYR_BASE')
     if not board_root_list:
         board_root_list = [
             f'{zephyr_base}/boards',

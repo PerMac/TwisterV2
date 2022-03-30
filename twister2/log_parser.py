@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class TestResult:
+class SubTestResult:
     """Store result for single C tests."""
     testname: str
     result: str
@@ -53,7 +53,7 @@ class LogParser:
         self.stop = False
         self.state = 'PASSED'  # overall status for execution
 
-    def parse(self) -> Generator[TestResult, None, None] | None:
+    def parse(self) -> Generator[SubTestResult, None, None] | None:
         """Parse logs and return list of tests with statuses."""
         for line in self.stream:
             if RUN_FAILED in line:
@@ -73,13 +73,14 @@ class LogParser:
                 logger.info('Found test suite: %s', test_suite_name)
 
             if match := result_re_pattern.match(line):
-                yield TestResult(**match.groupdict())
+                yield SubTestResult(**match.groupdict())
 
             if self.stop:
                 break
 
 
 if __name__ == '__main__':
+    # For debugging
     import pathlib
     from pprint import pprint
 

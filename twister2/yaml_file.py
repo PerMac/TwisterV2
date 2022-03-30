@@ -13,7 +13,7 @@ from typing import Generator
 import pytest
 import yaml
 
-from twister2.config import TwisterConfig
+from twister2.twister_config import TwisterConfig
 from twister2.yaml_test_function import YamlTestFunction, yaml_test_function_factory
 from twister2.yaml_test_specification import YamlTestSpecification
 
