@@ -26,9 +26,12 @@ def yaml_test_function_factory(spec: YamlTestSpecification, parent: Any) -> Yaml
         parent=parent,
         callobj=YamlTestCase(spec),  # callable object (test function)
     )
-    function.add_marker(pytest.mark.tags(*spec.tags))
     function.add_marker(pytest.mark.platform(spec.platform))
     function.add_marker(pytest.mark.type(spec.type))
+    if spec.tags:
+        function.add_marker(pytest.mark.tags(*spec.tags))
+    if spec.slow:
+        function.add_marker(pytest.mark.slow)
     return function
 
 
