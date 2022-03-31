@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 class TestPlanPlugin:
-    """Generate TestPlan as CSV."""
+    """Generate data for test plan."""
 
     def __init__(
         self,
