@@ -24,15 +24,15 @@ def get_test_path(item: pytest.Item) -> str:
 
 def get_item_type(item: pytest.Item) -> str:
     """Return test type."""
-    if isinstance(item, YamlTestFunction):
-        return item.function.spec.type
+    if marker := item.get_closest_marker('type'):
+        return marker.args[0]
     return ''
 
 
 def get_item_platform(item: pytest.Item) -> str:
     """Return test platform."""
-    if isinstance(item, YamlTestFunction):
-        return item.function.spec.platform
+    if marker := item.get_closest_marker('platform'):
+        return marker.args[0]
     return ''
 
 
@@ -45,6 +45,8 @@ def get_item_platform_allow(item: pytest.Item) -> str:
 
 def get_item_tags(item: pytest.Item) -> str:
     """Return comma separated tags."""
-    if isinstance(item, YamlTestFunction):
-        return ' '.join(item.function.spec.tags)
-    return ''
+    if marker := item.get_closest_marker('tags'):
+        tags = marker.args
+    else:
+        tags = []
+    return ' '.join(tags)

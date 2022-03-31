@@ -21,11 +21,15 @@ logger = logging.getLogger(__name__)
 
 def yaml_test_function_factory(spec: YamlTestSpecification, parent: Any) -> YamlTestFunction:
     """Generate test function."""
-    return YamlTestFunction.from_parent(
+    function = YamlTestFunction.from_parent(
         name=spec.name,
         parent=parent,
         callobj=YamlTestCase(spec),  # callable object (test function)
     )
+    function.add_marker(pytest.mark.tags(*spec.tags))
+    function.add_marker(pytest.mark.platform(spec.platform))
+    function.add_marker(pytest.mark.type(spec.type))
+    return function
 
 
 class YamlTestFunction(pytest.Function):

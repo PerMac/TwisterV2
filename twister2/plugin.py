@@ -150,3 +150,14 @@ def pytest_configure(config: pytest.Config):
     config._platforms = platforms
 
     config.twister_config = TwisterConfig.create(config)
+
+    # register custom markers for twister
+    config.addinivalue_line(
+        'markers', 'tags(tag1, tag2, ...): mark test for specific tags'
+    )
+    config.addinivalue_line(
+        'markers', 'platform(platform_name): mark test for specific platform'
+    )
+    config.addinivalue_line(
+        'markers', 'type(test_type): mark test for specific type'
+    )

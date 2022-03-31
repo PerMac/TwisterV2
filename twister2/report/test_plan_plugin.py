@@ -17,6 +17,7 @@ from twister2.report.helper import (
     get_suite_name,
     get_test_name,
     get_test_path,
+    get_item_platform,
 )
 
 logger = logging.getLogger(__name__)
@@ -45,6 +46,7 @@ class TestPlanPlugin:
             suite_name=get_suite_name(item),
             test_name=get_test_name(item),
             path=get_test_path(item),
+            platform=get_item_platform(item),
             tags=get_item_tags(item),
             type=get_item_type(item),
             platform_allow=get_item_platform_allow(item),
