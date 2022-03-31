@@ -49,9 +49,10 @@ class LogParser:
 
     def __init__(self, stream: Iterator[str]):
         self.stream = stream
-        self.config = HarnessConfig()
-        self.stop = False
-        self.state = 'PASSED'  # overall status for execution
+        self.config: HarnessConfig = HarnessConfig()
+        self.stop: bool = False
+        self.state: str = 'PASSED'  # overall status for execution
+        self.messages: list[str] = []
 
     def parse(self) -> Generator[SubTestResult, None, None] | None:
         """Parse logs and return list of tests with statuses."""
@@ -59,6 +60,7 @@ class LogParser:
             if RUN_FAILED in line:
                 logger.error('PROJECT EXECUTION FAILED')
                 self.state = 'FAILED'
+                self.messages.append('Project execution failed')
 
             if RUN_PASSED in line:
                 self.state = 'FAILED' if self.state == 'FAILED' else 'PASSED'

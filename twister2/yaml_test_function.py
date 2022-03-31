@@ -73,4 +73,4 @@ class YamlTestCase:
             with subtests.test(msg=test.testname, i=i):
                 assert test.result == 'PASS', f'Subtest {test.testname} failed'
 
-        assert log_parser.state == 'PASSED', 'Project execution failed'
+        assert log_parser.state == 'PASSED', 'Test failed due to: {}'.format('\n'.join(log_parser.messages))
