@@ -132,12 +132,12 @@ def pytest_configure(config: pytest.Config):
         )
 
     # load platforms
-    board_root_list = config.getoption('board_root') or config.getini('board_root')
-    if not board_root_list:
-        board_root_list = [
-            f'{zephyr_base}/boards',
-            f'{zephyr_base}/scripts/pylib/twister/boards',
-        ]
+    board_root_list = [
+        f'{zephyr_base}/boards',
+        f'{zephyr_base}/scripts/pylib/twister/boards',
+    ]
+    if board_root := config.getoption('board_root') or config.getini('board_root'):
+        board_root_list.append(board_root)
 
     logger.debug('ZEPHYR_BASE: %s', zephyr_base)
     logger.debug('BOARD_ROOT_LIST: %s', board_root_list)
