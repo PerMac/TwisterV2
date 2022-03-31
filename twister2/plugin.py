@@ -136,7 +136,7 @@ def pytest_configure(config: pytest.Config):
     if test_results_writers and not worker_input and not config.option.collectonly:
         config.pluginmanager.register(
             plugin=TestResultsPlugin(config, writers=test_results_writers),
-            name='test-results'
+            name='test_results'
         )
 
     if config.getoption('tags') and not worker_input:
@@ -146,15 +146,8 @@ def pytest_configure(config: pytest.Config):
         )
 
     logger.debug('ZEPHYR_BASE: %s', zephyr_base)
-    logger.debug('BOARD_ROOT_LIST: %s', board_root_list)
 
-    platforms: list = []
-    for directory in board_root_list:
-        for platform_config in discover_platforms(Path(directory)):
-            platforms.append(platform_config)
-    validate_platforms_list(platforms)
-    config._platforms = platforms
-
+    config._platforms = get_platforms(config, zephyr_base)
     config.twister_config = TwisterConfig.create(config)
 
     # register custom markers for twister
@@ -167,3 +160,22 @@ def pytest_configure(config: pytest.Config):
     config.addinivalue_line(
         'markers', 'type(test_type): mark test for specific type'
     )
+
+
+def get_platforms(config, zephyr_base) -> list:
+    """Return list of platforms."""
+    board_root_list = [
+        f'{zephyr_base}/boards',
+        f'{zephyr_base}/scripts/pylib/twister/boards',
+    ]
+    if board_root := (config.getoption('board_root') or config.getini('board_root')):
+        board_root_list.extend(board_root)
+
+    logger.debug('BOARD_ROOT_LIST: %s', board_root_list)
+
+    platforms: list = []
+    for directory in board_root_list:
+        for platform_config in discover_platforms(Path(directory)):
+            platforms.append(platform_config)
+    validate_platforms_list(platforms)
+    return platforms
