@@ -12,6 +12,7 @@ from twister2.report.test_results_json import JsonResultsReport
 from twister2.report.test_results_plugin import TestResultsPlugin
 from twister2.yaml_file import YamlFile
 from twister2.helper import configure_logging
+from twister2.filter.filter_plugin import FilterPlugin
 
 SAMPLE_FILENAME: str = 'sample.yaml'
 TESTCASE_FILENAME: str = 'testcase.yaml'
@@ -94,6 +95,11 @@ def pytest_addoption(parser: pytest.Parser):
         type='string',
         help='base directory for Zephyr',
     )
+    twister_group.addoption(
+        '--tags',
+        action='append',
+        help='filter test by tags, e.g.: --tags=@tag1,~@tag2 --tags=@tag3'
+    )
 
 
 def pytest_configure(config: pytest.Config):
@@ -106,6 +112,8 @@ def pytest_configure(config: pytest.Config):
             'Path to Zephyr directory must be provided as pytest argument or in environment variable: ZEPHYR_BASE'
         )
 
+    worker_input = hasattr(config, 'workerinput')  # xdist worker
+
     configure_logging(config)
 
     # configure TestPlan plugin
@@ -115,7 +123,7 @@ def pytest_configure(config: pytest.Config):
     if testplan_json_path := config.getoption('testplan_json_path'):
         test_plan_writers.append(JsonTestPlan(testplan_json_path))
 
-    if test_plan_writers and not hasattr(config, 'workerinput'):
+    if test_plan_writers and not worker_input:
         config.pluginmanager.register(
             plugin=TestPlanPlugin(config=config, writers=test_plan_writers),
             name='testplan'
@@ -125,19 +133,17 @@ def pytest_configure(config: pytest.Config):
     if test_result_json_path := config.getoption('results_json_path'):
         test_results_writers.append(JsonResultsReport(test_result_json_path))
 
-    if test_results_writers and not hasattr(config, 'workerinput') and not config.option.collectonly:
+    if test_results_writers and not worker_input and not config.option.collectonly:
         config.pluginmanager.register(
             plugin=TestResultsPlugin(config, writers=test_results_writers),
             name='test-results'
         )
 
-    # load platforms
-    board_root_list = [
-        f'{zephyr_base}/boards',
-        f'{zephyr_base}/scripts/pylib/twister/boards',
-    ]
-    if board_root := (config.getoption('board_root') or config.getini('board_root')):
-        board_root_list.append(board_root)
+    if config.getoption('tags') and not worker_input:
+        config.pluginmanager.register(
+            plugin=FilterPlugin(config),
+            name='filter_tests'
+        )
 
     logger.debug('ZEPHYR_BASE: %s', zephyr_base)
     logger.debug('BOARD_ROOT_LIST: %s', board_root_list)
