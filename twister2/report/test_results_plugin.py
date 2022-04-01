@@ -150,7 +150,7 @@ class TestResultsPlugin:
             )
             tests_list.append(test)
 
-        duration = self.session_stop_time - self.session_stop_time
+        duration = self.session_stop_time - self.session_start_time
         environment = dict(
             report_time=time.strftime('%H:%M:%S %d-%m-%Y'),
             pc_name=platform.node() or 'N/A',
