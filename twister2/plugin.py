@@ -1,18 +1,19 @@
 import logging
-from pathlib import Path
 import os
+from pathlib import Path
 
 import pytest
-from twister2.twister_config import TwisterConfig
-from twister2.platform_specification import discover_platforms, validate_platforms_list
+
+from twister2.filter.filter_plugin import FilterPlugin
+from twister2.helper import configure_logging
+from twister2.platform_specification import get_platforms
 from twister2.report.test_plan_csv import CsvTestPlan
 from twister2.report.test_plan_json import JsonTestPlan
 from twister2.report.test_plan_plugin import TestPlanPlugin
 from twister2.report.test_results_json import JsonResultsReport
 from twister2.report.test_results_plugin import TestResultsPlugin
+from twister2.twister_config import TwisterConfig
 from twister2.yaml_file import YamlFile
-from twister2.helper import configure_logging
-from twister2.filter.filter_plugin import FilterPlugin
 
 SAMPLE_FILENAME: str = 'sample.yaml'
 TESTCASE_FILENAME: str = 'testcase.yaml'
@@ -147,7 +148,9 @@ def pytest_configure(config: pytest.Config):
 
     logger.debug('ZEPHYR_BASE: %s', zephyr_base)
 
-    config._platforms = get_platforms(config, zephyr_base)
+    board_root = (config.getoption('board_root') or config.getini('board_root'))
+
+    config._platforms = get_platforms(zephyr_base, board_root)
     config.twister_config = TwisterConfig.create(config)
 
     # register custom markers for twister
@@ -160,22 +163,3 @@ def pytest_configure(config: pytest.Config):
     config.addinivalue_line(
         'markers', 'type(test_type): mark test for specific type'
     )
-
-
-def get_platforms(config, zephyr_base) -> list:
-    """Return list of platforms."""
-    board_root_list = [
-        f'{zephyr_base}/boards',
-        f'{zephyr_base}/scripts/pylib/twister/boards',
-    ]
-    if board_root := (config.getoption('board_root') or config.getini('board_root')):
-        board_root_list.extend(board_root)
-
-    logger.debug('BOARD_ROOT_LIST: %s', board_root_list)
-
-    platforms: list = []
-    for directory in board_root_list:
-        for platform_config in discover_platforms(Path(directory)):
-            platforms.append(platform_config)
-    validate_platforms_list(platforms)
-    return platforms

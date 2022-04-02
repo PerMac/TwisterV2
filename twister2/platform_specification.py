@@ -65,3 +65,22 @@ def validate_platforms_list(platforms: list[PlatformSpecification]) -> None:
             platforms_list.append(platform.identifier)
     if len(duplicated) != 0:
         pytest.exit(f'There are duplicated platforms: {", ".join(duplicated)}')
+
+
+def get_platforms(zephyr_base: str, board_root: str = None) -> list:
+    """Return list of platforms."""
+    board_root_list = [
+        f'{zephyr_base}/boards',
+        f'{zephyr_base}/scripts/pylib/twister/boards',
+    ]
+    if board_root:
+        board_root_list.extend(board_root)
+
+    logger.debug('BOARD_ROOT_LIST: %s', board_root_list)
+
+    platforms: list = []
+    for directory in board_root_list:
+        for platform_config in discover_platforms(Path(directory)):
+            platforms.append(platform_config)
+    validate_platforms_list(platforms)
+    return platforms
