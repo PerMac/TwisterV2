@@ -43,10 +43,21 @@ class YamlTestSpecification:
         self.arch_allow = _string_to_set(self.arch_allow)
         self.arch_exclude = _string_to_set(self.arch_exclude)
         self.depends_on = _string_to_set(self.depends_on)
+        self.extra_sections = _string_to_list(self.extra_sections)
+        self.extra_configs = _string_to_list(self.extra_configs)
+        self.extra_args = _string_to_list(self.extra_args)
+        self.integration_platforms = _string_to_list(self.integration_platforms)
 
 
 def _string_to_set(value: str | set) -> set[str]:
     if isinstance(value, str):
         return set(value.split())
+    else:
+        return value
+
+
+def _string_to_list(value: str | list) -> list[str]:
+    if isinstance(value, str):
+        return list(value.split())
     else:
         return value
