@@ -78,13 +78,15 @@ class TestResultsPlugin:
         self.test_results: dict[str, TestResult] = {}
         self.items: dict[str, pytest.Item] = {}
 
-    @pytest.hookimpl(tryfirst=True, hookwrapper=True)
-    def pytest_runtest_makereport(self, item, call):
-        outcome = yield
-        report = outcome.get_result()
-        if report.when == 'call':
-            if item.nodeid not in self.items:
-                self.items[item.nodeid] = item
+    def pytest_report_collectionfinish(self, config: pytest.Config, items: list[pytest.Item]):
+        self.items = {item.nodeid: item for item in items}
+
+    @pytest.hookimpl(hookwrapper=True)
+    def pytest_collection(self, session):
+        yield
+        if not hasattr(session, 'items'):
+            # Collection was skipped (probably due to xdist)
+            session.perform_collect()
 
     def pytest_runtest_logreport(self, report: pytest.TestReport):
         outcome = self._get_outcome(report)
@@ -96,14 +98,15 @@ class TestResultsPlugin:
         if self._is_sub_test(report):
             self.test_results[report.nodeid].add_subtest(dict(name=report.context.msg, status=outcome))
 
-    def _is_sub_test(self, report: pytest.Report) -> bool:
+    @staticmethod
+    def _is_sub_test(report: pytest.Report) -> bool:
         return isinstance(report, SubTestReport)
 
     def pytest_sessionstart(self, session: pytest.Session):
         self.session_start_time = time.time()
 
     def pytest_sessionfinish(self, session: pytest.Session):
-        self.session_stop_time = time.time()
+        self.session_finish_time = time.time()
         data = self._generate_report(session)
         self._save_report(data)
 
@@ -156,7 +159,7 @@ class TestResultsPlugin:
             )
             tests_list.append(test)
 
-        duration = self.session_stop_time - self.session_start_time
+        duration = self.session_finish_time - self.session_start_time
         environment = dict(
             report_time=time.strftime('%H:%M:%S %d-%m-%Y'),
             pc_name=platform.node() or 'N/A',
