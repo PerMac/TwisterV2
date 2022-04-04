@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 pytest_plugins = (
     'twister2.fixtures.builder',
+    'twister2.fixtures.dut',
     'twister2.fixtures.log_parser',
 )
 

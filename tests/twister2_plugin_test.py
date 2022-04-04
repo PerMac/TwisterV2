@@ -8,7 +8,7 @@ TEST_DIR = Path(__file__).parent
 @pytest.fixture()
 def yaml_test(testdir):
     testdir.copy_example(TEST_DIR / 'data/testcase.yaml')
-    testdir.copy_example(TEST_DIR / 'data/stream.log')
+    testdir.copy_example(TEST_DIR / 'data/device.log')
     # testdir.makeconftest("pytest_plugins = ['twister2.plugin']")
     return testdir
 

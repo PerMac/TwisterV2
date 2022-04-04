@@ -12,3 +12,11 @@ class TwisterFatalError(TwisterException):
 
 class ProjectExecutionFailed(TwisterException):
     """Project execution failed exception."""
+
+
+class TwisterBuilderException(TwisterException):
+    """Any exception during building."""
+
+
+class TwisterRunException(TwisterException):
+    """Any exception during executing."""
