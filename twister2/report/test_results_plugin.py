@@ -76,6 +76,15 @@ class TestResultsPlugin:
         self.writers = writers
         self.counter = Counter(passed=0, failed=0, skipped=0, xfailed=0, xpassed=0, error=0)
         self.test_results: dict[str, TestResult] = {}
+        self.items: dict[str, pytest.Item] = {}
+
+    @pytest.hookimpl(tryfirst=True, hookwrapper=True)
+    def pytest_runtest_makereport(self, item, call):
+        outcome = yield
+        report = outcome.get_result()
+        if report.when == 'call':
+            if item.nodeid not in self.items:
+                self.items[item.nodeid] = item
 
     def pytest_runtest_logreport(self, report: pytest.TestReport):
         outcome = self._get_outcome(report)
@@ -123,10 +132,9 @@ class TestResultsPlugin:
     def _generate_report(self, session: pytest.Session) -> dict:
         """Return rendered report as string"""
         tests_list: list = []
-        items: dict[str, pytest.Item] = {item.nodeid: item for item in session.items}
 
         for result in self.test_results.values():
-            item = items.get(result.nodeid)
+            item = self.items.get(result.nodeid)
 
             if not item:
                 continue
