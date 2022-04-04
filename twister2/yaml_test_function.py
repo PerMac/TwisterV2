@@ -23,6 +23,7 @@ def yaml_test_function_factory(spec: YamlTestSpecification, parent: Any) -> Yaml
     """Generate test function."""
     function = YamlTestFunction.from_parent(
         name=spec.name,
+        originalname=spec.original_name,
         parent=parent,
         callobj=YamlTestCase(spec),  # callable object (test function)
     )

@@ -20,7 +20,6 @@ TESTCASE_FILENAME: str = 'testcase.yaml'
 
 logger = logging.getLogger(__name__)
 
-# include fixtures
 pytest_plugins = (
     'twister2.fixtures.builder',
     'twister2.fixtures.log_parser',
@@ -113,7 +112,7 @@ def pytest_configure(config: pytest.Config):
             'Path to Zephyr directory must be provided as pytest argument or in environment variable: ZEPHYR_BASE'
         )
 
-    worker_input = hasattr(config, 'workerinput')  # xdist worker
+    is_worker_input = hasattr(config, 'workerinput')  # xdist worker
 
     configure_logging(config)
 
@@ -124,7 +123,7 @@ def pytest_configure(config: pytest.Config):
     if testplan_json_path := config.getoption('testplan_json_path'):
         test_plan_writers.append(JsonTestPlan(testplan_json_path))
 
-    if test_plan_writers and not worker_input:
+    if test_plan_writers and not is_worker_input:
         config.pluginmanager.register(
             plugin=TestPlanPlugin(config=config, writers=test_plan_writers),
             name='testplan'
@@ -134,13 +133,13 @@ def pytest_configure(config: pytest.Config):
     if test_result_json_path := config.getoption('results_json_path'):
         test_results_writers.append(JsonResultsReport(test_result_json_path))
 
-    if test_results_writers and not worker_input and not config.option.collectonly:
+    if test_results_writers and not is_worker_input and not config.option.collectonly:
         config.pluginmanager.register(
             plugin=TestResultsPlugin(config, writers=test_results_writers),
             name='test_results'
         )
 
-    if config.getoption('tags') and not worker_input:
+    if config.getoption('tags') and not is_worker_input:
         config.pluginmanager.register(
             plugin=FilterPlugin(config),
             name='filter_tests'

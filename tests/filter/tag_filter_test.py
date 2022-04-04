@@ -1,6 +1,5 @@
-import textwrap
-
 import pytest
+
 from twister2.filter.tag_filter import TagMatcher
 
 

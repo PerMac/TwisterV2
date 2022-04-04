@@ -8,6 +8,7 @@ from pathlib import Path
 class YamlTestSpecification:
     """Test specification for yaml test."""
     name: str  #: test case name
+    original_name: str  #: keeps test case name without platform
     path: Path  #: path to a folder where C files are stored
     platform: str  #: platform name used for this test
     tags: set = field(default_factory=set)

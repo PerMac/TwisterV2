@@ -32,9 +32,7 @@ class TestResult:
     """Class stores test result for single test."""
 
     def __init__(self, outcome: str, report: pytest.TestReport, config: pytest.Config):
-        self.test_id: str = report.nodeid.encode(
-            'utf-8').decode('unicode_escape'
-        )
+        self.test_id: str = report.nodeid.encode('utf-8').decode('unicode_escape')
         self.nodeid = report.nodeid
         self.name: str = self.test_id
         if getattr(report, 'when', 'call') != 'call':
@@ -46,7 +44,7 @@ class TestResult:
         self.duration: float = getattr(report, 'duration', 0.0)
         # self.message: str = report.longrepr
         self.message: str = report.longreprtext
-        self.subtests = []
+        self.subtests: list = []
 
     def __repr__(self):
         return f'{self.__class__.__name__}({self.status!r})'

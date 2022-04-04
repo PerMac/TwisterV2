@@ -53,6 +53,7 @@ def _generate_test_variants_for_platforms(
         if platform in platform_exclude:
             continue
         spec['name'] = test_name + f'[{platform}]'
+        spec['original_name'] = test_name
         spec['platform'] = platform
         yaml_test_spec = YamlTestSpecification(**spec)
         logger.debug('Generated: %s', yaml_test_spec)
@@ -73,7 +74,7 @@ def _read_test_specifications_from_yaml(
     if yaml_tests.get('tests') is None:
         return
 
-    sample = yaml_tests.get('sample', {})  # exists in yaml but it is not used
+    sample = yaml_tests.get('sample', {})  # exists in yaml, but it is not used # noqa: F841
     common = yaml_tests.get('common', {})
 
     for test_name, spec in yaml_tests['tests'].items():
