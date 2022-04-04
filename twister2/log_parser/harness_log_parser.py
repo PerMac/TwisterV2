@@ -5,16 +5,16 @@ from __future__ import annotations
 
 import logging
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from typing import Iterator, Generator
 
 from twister2.exceptions import TwisterFatalError
+from twister2.log_parser.log_parser_abstract import SubTestResult, LogParserAbstract
 
 RUN_PASSED: str = 'PROJECT EXECUTION SUCCESSFUL'
 RUN_FAILED: str = 'PROJECT EXECUTION FAILED'
 ZEPHYR_FATAL_ERROR: str = 'ZEPHYR FATAL ERROR'
 
-# PASS - test_thread_runtime_stats_get in 0.1 seconds
 result_re_pattern: re.Pattern = re.compile(
     r'^.*(?P<result>PASS|FAIL|SKIP) - (test_)?(?P<testname>.*) in (?P<duration>[0-9\.]+) seconds$'
 )
@@ -24,35 +24,17 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class SubTestResult:
-    """Store result for single C tests."""
-    testname: str
-    result: str
-    duration: float
-
-    def __post_init__(self):
-        if isinstance(self.duration, str):
-            self.duration = float(self.duration)
-
-    def asdict(self) -> dict:
-        return asdict(self)
-
-
-@dataclass
 class HarnessConfig:
     fail_on_fault: bool = False
 
 
-# TODO: implement as async or thread
-class LogParser:
+class HarnessLogParser(LogParserAbstract):
     """Parse output from log stream."""
 
     def __init__(self, stream: Iterator[str]):
-        self.stream = stream
+        super().__init__(stream)
         self.config: HarnessConfig = HarnessConfig()
         self.stop: bool = False
-        self.state: str = 'PASSED'  # overall status for execution
-        self.messages: list[str] = []
 
     def parse(self) -> Generator[SubTestResult, None, None] | None:
         """Parse logs and return list of tests with statuses."""
@@ -79,15 +61,3 @@ class LogParser:
 
             if self.stop:
                 break
-
-
-if __name__ == '__main__':
-    # For debugging
-    import pathlib
-    from pprint import pprint
-
-    filepath = (pathlib.Path(__file__).parents[1] / 'examples/zephyr_logs/threads_lifecycle.log').resolve()
-
-    parser = LogParser(filepath.open())
-    results = parser.parse()
-    pprint(list(results))

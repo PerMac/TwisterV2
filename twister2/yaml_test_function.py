@@ -14,7 +14,7 @@ from typing import Any
 import pytest
 
 from twister2.device.device_abstract import DeviceAbstract
-from twister2.log_parser import LogParser
+from twister2.log_parser.log_parser_abstract import LogParserAbstract
 from twister2.yaml_test_specification import YamlTestSpecification
 
 logger = logging.getLogger(__name__)
@@ -52,7 +52,7 @@ class YamlTestCase:
         self.spec = spec
         self.__doc__ = description
 
-    def __call__(self, dut: DeviceAbstract, log_parser: LogParser, subtests, *args, **kwargs):
+    def __call__(self, dut: DeviceAbstract, log_parser: LogParserAbstract, subtests, *args, **kwargs):
         """Method called by pytest when it runs test."""
         logger.info('Execution test %s from %s', self.spec.name, self.spec.path)
 
