@@ -1,5 +1,7 @@
 # twister v2
 
+Pytest plugin to run Zephyr tests and collect results.
+
 ## Installation
 
 Installation from the source:
@@ -27,10 +29,10 @@ pytest --help
 
 Run tests:
 ```
-pytest tests --zephyr-base=path_to_zephyr
+pytest tests/kernel/common -vv --zephyr-base=path_to_zephyr --platform=native_posix --results-json=twister-out/results.json --log-level=DEBUG
 ```
 
-Show test plan:
+show what fixtures and tests would be executed but don't execute anything:
 ```
 pytest tests --setup-plan
 ```
@@ -40,24 +42,31 @@ List all tests without executing:
 pytest tests --collect-only
 ```
 
-Generate test plan in CSV format:
+Run tests only for specific platforms:
+```
+pytest tests --platform=qemu_x86 --platform=nrf51dk_nrf51422
+```
+
+Provide directory to search for board configuration files:
+```
+pytest tests --board-root=path_to_board_dir
+```
+
+## Reports
+
+Generate test plan in JSON format:
 ```
 pytest tests --testplan-csv=testplan.csv --collect-only
+```
+
+Generate test plan in CSV format:
+```
+pytest tests --testplan-json=testplan.json --collect-only
 ```
 
 Generate test results in JSON format:
 ```
 pytest tests --resutls-json=results.json
-```
-
-Generate tests for specific platforms:
-```
-pytest tests --platform=qemu_x86 --platform=nrf51dk_nrf51422
-```
-
-Generate JUnit report with results:
-```
-pytest tests --junitxml=results.xml
 ```
 
 ## Filtering tests
@@ -77,20 +86,3 @@ Examples of usage:
   * --tags=@tag1,@tag2
 * (tag1 or tag2) and tag3 and not tag4
   * --tags=@tag1,@tag2 --tags=@tag3 --tags=~@tag4
-
-
-## Available options
-
-```
-Twister reports:
-  --testplan-csv=PATH   generate test plan in CSV format
-  --testplan-json=PATH  generate test plan in JSON format
-  --results-json=PATH   generate test results report in JSON format
-
-Twister:
-  --build-only          build only
-  --platform=PLATFORM   build tests for specific platforms
-  --board-root=PATH     directory to search for board configuration files
-  --zephyr-base=path    base directory for Zephyr
-  --tags=TAGS           filter test by tags, e.g.: --tags=@tag1,~@tag2 --tags=@tag3
-```
