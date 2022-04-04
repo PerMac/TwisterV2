@@ -18,7 +18,7 @@ def log_parser(request: pytest.FixtureRequest, dut) -> HarnessLogParser | None:
     if not isinstance(request.function, YamlTestCase):
         yield
 
-    harness = getattr(request.function.spec, 'harness', 'harness')
+    harness = request.function.spec.harness or 'harness'
     if dut.log_file.exists():
         with open(dut.log_file, 'r', encoding='UTF-8') as file:
             yield LogParserFactory.get_parser(harness)(file)
