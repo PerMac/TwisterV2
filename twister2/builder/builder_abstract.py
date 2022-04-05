@@ -26,10 +26,6 @@ class BuilderAbstract(abc.ABC):
     def build(self, platform: str, build_dir: str | Path = None, **kwargs) -> None:
         """Build Zephyr application."""
 
-    @abc.abstractmethod
-    def flash(self, build_dir: str | Path, **kwargs) -> None:
-        """Flash device."""
-
     @contextlib.contextmanager
     def set_directory(self, path: Path) -> None:
         origin = Path().absolute()
