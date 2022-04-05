@@ -29,5 +29,10 @@ class DeviceAbstract(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def flash(self, build_dir: str | Path) -> None:
-        pass
+    def flash(self, build_dir: str | Path, timeout: float = 60.0) -> None:
+        """
+        Flash and run code on a device.
+
+        :param build_dir: build directory
+        :param timeout: time out in seconds
+        """

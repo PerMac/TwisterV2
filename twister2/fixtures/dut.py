@@ -18,6 +18,6 @@ def dut(request: pytest.FixtureRequest, builder: BuilderAbstract) -> DeviceAbstr
 
     device = DeviceFactory.get_device('simulator')()  # TODO:
     device.connect()
-    device.flash(build_dir=build_dir)
+    device.flash(build_dir=build_dir, timeout=function.spec.timeout)
     yield device
     device.disconnect()

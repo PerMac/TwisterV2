@@ -20,7 +20,7 @@ class Simulator(DeviceAbstract):
     def disconnect(self):
         pass
 
-    def flash(self, build_dir: str | Path) -> None:
+    def flash(self, build_dir: str | Path, timeout: float = 60.0) -> None:
         command = Path(build_dir) / 'zephyr' / 'zephyr.exe'
         self.log_file = Path(build_dir) / 'device.log'
         logger.info('Flashing device')
@@ -34,7 +34,7 @@ class Simulator(DeviceAbstract):
             )
 
             t1 = self.save_process_output_to_file(process, self.log_file)
-            t2 = self.terminate_process(process, timeout=60)
+            t2 = self.terminate_process(process, timeout=timeout)
             t1.start()
             t2.start()
             t1.join()
