@@ -12,6 +12,9 @@ class LogParserAbstract(abc.ABC):
         self.state: str = 'PASSED'  # overall status for execution
         self.messages: list[str] = []
 
+    def __repr__(self):
+        return f'{self.__class__.__name__}()'
+
     @abc.abstractmethod
     def parse(self) -> Generator[SubTestResult, None, None] | None:
         pass

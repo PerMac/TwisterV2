@@ -16,6 +16,9 @@ class BuilderAbstract(abc.ABC):
         self.zephyr_base: Path = Path(zephyr_base)
         self.source_dir: Path = Path(source_dir)
 
+    def __repr__(self):
+        return f'{self.__class__.__name__}(zephyr_base={self.zephyr_base!r}, source_dir={self.source_dir!r})'
+
     @property
     def env(self) -> dict[str, str]:
         env = os.environ.copy()
