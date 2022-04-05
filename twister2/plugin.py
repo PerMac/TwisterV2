@@ -163,3 +163,6 @@ def pytest_configure(config: pytest.Config):
     config.addinivalue_line(
         'markers', 'type(test_type): mark test for specific type'
     )
+    config.addinivalue_line(
+        'markers', 'slow: mark test as slow'
+    )

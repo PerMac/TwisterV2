@@ -34,6 +34,8 @@ def yaml_test_function_factory(spec: YamlTestSpecification, parent: Any) -> Yaml
         function.add_marker(pytest.mark.tags(*spec.tags))
     if spec.slow:
         function.add_marker(pytest.mark.slow)
+    if spec.skip:
+        function.add_marker(pytest.mark.skip('Skipped in yaml specification'))
     return function
 
 

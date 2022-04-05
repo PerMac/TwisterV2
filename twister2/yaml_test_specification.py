@@ -7,7 +7,7 @@ from pathlib import Path
 @dataclass
 class YamlTestSpecification:
     """Test specification for yaml test."""
-    name: str  #: test case name
+    name: str  #: test case name plus platform
     original_name: str  #: keeps test case name without platform
     path: Path  #: path to a folder where C files are stored
     platform: str  #: platform name used for this test

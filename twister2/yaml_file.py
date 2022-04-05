@@ -30,6 +30,7 @@ class YamlFile(pytest.File):
         for spec in _read_test_specifications_from_yaml(self.fspath, twister_config):
             test_function: YamlTestFunction = yaml_test_function_factory(spec=spec, parent=self)
             # extend xml report
+            test_function.user_properties.append(('type', spec.type))
             test_function.user_properties.append(('tags', ' '.join(spec.tags)))
             test_function.user_properties.append(('platform', spec.platform))
             yield test_function
