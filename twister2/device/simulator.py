@@ -47,7 +47,8 @@ class Simulator(DeviceAbstract):
                 logger.info('Finished flashing %s', build_dir)
 
     @staticmethod
-    def save_process_output_to_file(process, output_file: str | Path) -> threading.Thread:
+    def save_process_output_to_file(process: subprocess.Popen, output_file: str | Path) -> threading.Thread:
+        """Create Thread which saves a process output to a file."""
         def read():
             logger.debug('Saving process output to file: %s', output_file)
             with process.stdout:
@@ -60,8 +61,8 @@ class Simulator(DeviceAbstract):
         return thread
 
     @staticmethod
-    def terminate_process(process, timeout: float) -> threading.Thread:
-        """Kill process after given time."""
+    def terminate_process(process: subprocess.Popen, timeout: float) -> threading.Thread:
+        """Create Thread which kills a process after given time."""
         def waiting():
             time.sleep(timeout)
             process.kill()
