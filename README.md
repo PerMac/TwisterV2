@@ -4,6 +4,11 @@ Pytest plugin to run Zephyr tests and collect results.
 
 ## Installation
 
+Installation from github:
+```
+pip install git+https://github.com/PerMac/TwisterV2.git
+```
+
 Installation from the source:
 ```
 pip install .
@@ -32,7 +37,7 @@ Run tests:
 pytest tests/kernel/common -vv --zephyr-base=path_to_zephyr --platform=native_posix --results-json=twister-out/results.json --log-level=DEBUG
 ```
 
-show what fixtures and tests would be executed but don't execute anything:
+Show what fixtures and tests would be executed but don't execute anything:
 ```
 pytest tests --setup-plan
 ```
