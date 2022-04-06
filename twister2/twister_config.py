@@ -30,6 +30,7 @@ class TwisterConfig:
         default_platforms: list[str] = config.getoption('--platform')
         board_root: list[str] = config.getoption('--board-root')
         platforms = config._platforms
+        output_dir: str = config.getoption('--outdir')
 
         if not default_platforms:
             default_platforms = [platform.identifier for platform in platforms]
@@ -40,6 +41,7 @@ class TwisterConfig:
             platforms=platforms,
             default_platforms=default_platforms,
             board_root=board_root,
+            twister_out=output_dir,
         )
         return cls(**data)
 

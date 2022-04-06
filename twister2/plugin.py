@@ -97,6 +97,14 @@ def pytest_addoption(parser: pytest.Parser):
         help='base directory for Zephyr',
     )
     twister_group.addoption(
+        '-O',
+        '--outdir',
+        metavar='path',
+        dest='output_dir',
+        default='twister-out',
+        help='output directory for logs and binaries (default: %(default)s)'
+    )
+    twister_group.addoption(
         '--tags',
         action='append',
         help='filter test by tags, e.g.: --tags=@tag1,~@tag2 --tags=@tag3'
