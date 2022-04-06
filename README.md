@@ -93,3 +93,8 @@ Scan connected devices and create hardware map:
 ```
 twister_tools --generate-hardware-map hardware_map.yaml
 ```
+
+Scan connected devices and list hardware map:
+```
+twister_tools --list-hardware-map
+```

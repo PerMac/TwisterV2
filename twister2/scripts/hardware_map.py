@@ -106,6 +106,10 @@ def scan(persistent: bool = False, filename: str | None = None) -> int:
                 yaml.dump(hardware_map_list_as_dict, file, Dumper=yaml.Dumper, default_flow_style=False)
                 logger.info('Saved as %s', filename)
         else:
-            import pprint
-            pprint.pprint(hardware_map_list)
+            print()
+            print(f'| {"Platform":20} | {"ID":>20} | {"Serial devices":20} |')
+            print(f'|{"-"*22}|{"-"*22}|{"-"*22}|')
+            for hardware in hardware_map_list:
+                print(f'| {hardware.platform:20} | {hardware.id:20} | {hardware.serial:20} |')
+            print()
         return 0
