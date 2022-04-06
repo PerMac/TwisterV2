@@ -20,7 +20,7 @@ def builder(request: pytest.FixtureRequest) -> BuilderAbstract:
     function = request.function
     builder_klass = BuilderFactory.get_builder('west')
     builder = builder_klass(zephyr_base=twister_config.zephyr_base, source_dir=function.spec.path)
-    build_dir = Path(twister_config.twister_out) / function.spec.platform / request.node.originalname.replace('.', '/')
+    build_dir = Path(twister_config.output_dir) / function.spec.platform / request.node.originalname.replace('.', '/')
     builder.build(
         platform=function.spec.platform,
         build_dir=build_dir,

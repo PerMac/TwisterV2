@@ -7,6 +7,7 @@ from typing import Any
 
 import pytest
 
+from twister2.device.hardware_map import HardwareMap
 from twister2.platform_specification import PlatformSpecification
 
 logger = logging.getLogger(__name__)
@@ -16,11 +17,12 @@ logger = logging.getLogger(__name__)
 class TwisterConfig:
     """Store twister configuration to have easy access in test."""
     zephyr_base: str
-    build_only: bool = False
-    platforms: list[PlatformSpecification] = field(default_factory=list)
-    default_platforms: list[str] = field(default_factory=list)
+    output_dir: str = 'twister-out'
     board_root: list = field(default_factory=list)
-    twister_out: str = 'twister-out'
+    build_only: bool = False
+    default_platforms: list[str] = field(default_factory=list)
+    platforms: list[PlatformSpecification] = field(default_factory=list, repr=False)
+    hardware_map_list: list[HardwareMap] = field(default_factory=list, repr=False)
 
     @classmethod
     def create(cls, config: pytest.Config) -> TwisterConfig:
@@ -31,6 +33,11 @@ class TwisterConfig:
         board_root: list[str] = config.getoption('--board-root')
         platforms = config._platforms
         output_dir: str = config.getoption('--outdir')
+        hardware_map_file = config.getoption('--hardware-map')
+
+        hardware_map_list: list[HardwareMap] = []
+        if hardware_map_file:
+            hardware_map_list = HardwareMap.read_from_file(filename=hardware_map_file)
 
         if not default_platforms:
             default_platforms = [platform.identifier for platform in platforms]
@@ -42,6 +49,7 @@ class TwisterConfig:
             default_platforms=default_platforms,
             board_root=board_root,
             twister_out=output_dir,
+            hardware_map_list=hardware_map_list,
         )
         return cls(**data)
 
@@ -50,5 +58,6 @@ class TwisterConfig:
         return dict(
             build_only=self.build_only,
             default_platforms=self.default_platforms,
-            board_root=self.board_root
+            board_root=self.board_root,
+            output_dir=self.output_dir,
         )
