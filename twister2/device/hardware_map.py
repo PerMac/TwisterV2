@@ -31,6 +31,7 @@ class HardwareMap:
         return [cls(**hardware) for hardware in data]
 
     def asdict(self):
+        """Return hardware map dict valid for map file."""
         return dict(
             connected=self.connected,
             id=self.id,
@@ -39,7 +40,3 @@ class HardwareMap:
             runner=self.runner,
             serial=self.serial
         )
-
-
-if __name__ == '__main__':
-    print(HardwareMap.read_from_file(r'../examples/map_filled.yaml'))

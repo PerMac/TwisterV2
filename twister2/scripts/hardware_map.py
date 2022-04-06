@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import platform
 import re
@@ -5,6 +7,7 @@ from pathlib import Path
 
 import yaml
 from serial.tools import list_ports
+
 from twister2.device.hardware_map import HardwareMap
 
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +47,7 @@ RUNNER_MAPPING = {
 }
 
 
-def scan(persistent: bool = False, filename: str = None) -> int:
+def scan(persistent: bool = False, filename: str | None = None) -> int:
     """Scan for connected devices and generate hardware map."""
     hardware_map_list = []
     if persistent and platform.system() == 'Linux':
@@ -99,8 +102,8 @@ def scan(persistent: bool = False, filename: str = None) -> int:
 
         if filename:
             with open(filename, 'w', encoding='UTF-8') as file:
-                hardware_map_list_2 = [device.asdict() for device in hardware_map_list]
-                yaml.dump(hardware_map_list_2, file, Dumper=yaml.Dumper, default_flow_style=False)
+                hardware_map_list_as_dict = [device.asdict() for device in hardware_map_list]
+                yaml.dump(hardware_map_list_as_dict, file, Dumper=yaml.Dumper, default_flow_style=False)
                 logger.info('Saved as %s', filename)
         else:
             import pprint
