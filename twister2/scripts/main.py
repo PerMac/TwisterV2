@@ -1,7 +1,8 @@
 import argparse
+from twister2.scripts.hardware_map import scan
 
 
-def main():
+def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--generate-hardware-map',
@@ -13,7 +14,7 @@ def main():
     args = parser.parse_args()
 
     if args.hardware_map_path:
-        print('Not implemented')
-        raise SystemExit(0)
+        return scan(filename=args.hardware_map_path, persistent=False)
 
     parser.print_help()
+    return 1

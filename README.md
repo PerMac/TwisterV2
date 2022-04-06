@@ -86,3 +86,10 @@ Examples of usage:
   * --tags=@tag1,@tag2
 * (tag1 or tag2) and tag3 and not tag4
   * --tags=@tag1,@tag2 --tags=@tag3 --tags=~@tag4
+
+## Tools
+
+Scan connected devices and create hardware map:
+```
+twister_tools --generate-hardware-map hardware_map.yaml
+```
