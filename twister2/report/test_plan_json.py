@@ -14,7 +14,7 @@ class JsonTestPlan(BaseReportWriter):
     def __init__(self, filename: str) -> None:
         self.filename = self._normalize_logfile_path(filename)
 
-    def write(self, data: list) -> None:
+    def write(self, data: dict) -> None:
         if not data:
             logger.warning('No data to generate test plan')
             return

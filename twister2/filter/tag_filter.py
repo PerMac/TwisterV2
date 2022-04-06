@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Set, List, Optional, Sequence, Tuple
+from typing import Set, List, Sequence, Tuple
 
 import pytest
 
@@ -47,14 +47,14 @@ class TagFilter:
 class TagMatcher:
     """Check if test item should be run or not."""
 
-    def __init__(self, tags: Optional[Sequence[str]] = None):
+    def __init__(self, tags: Sequence[str] | None = None):
         self.selected: List[Set[str]] = []  #: store selected tags
         self.deselected: List[Set[str]] = []  #: store deselected tags
         if tags is None:
             tags = []
         self.parse(tags)
 
-    def parse(self, item_tags: list[str]) -> None:
+    def parse(self, item_tags: Sequence[str]) -> None:
         """
         :param item_tags: test tags separated by comma
         """

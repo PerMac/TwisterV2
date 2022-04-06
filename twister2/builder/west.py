@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class WestBuilder(BuilderAbstract):
 
-    def build(self, platform: str, build_dir: str | Path = None, **kwargs) -> None:
+    def build(self, platform: str, build_dir: str | Path | None = None, **kwargs) -> None:
         """
         Build Zephyr application.
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 import platform
 import time
 from collections import Counter
+from typing import Sequence
 
 import pytest
 from pytest_subtests import SubTestReport
@@ -67,14 +68,14 @@ class TestResult:
 class TestResultsPlugin:
     """Class collects results and crates result report."""
 
-    def __init__(self, config: pytest.Config, writers: list[BaseReportWriter]):
+    def __init__(self, config: pytest.Config, writers: Sequence[BaseReportWriter]):
         """
         :param config: pytest configuration
         :param writers: list of report writers
         """
         self.config = config
         self.writers = writers
-        self.counter = Counter(passed=0, failed=0, skipped=0, xfailed=0, xpassed=0, error=0)
+        self.counter: Counter = Counter(passed=0, failed=0, skipped=0, xfailed=0, xpassed=0, error=0)
         self.test_results: dict[str, TestResult] = {}
         self.items: dict[str, pytest.Item] = {}
 

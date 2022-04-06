@@ -79,8 +79,8 @@ def _read_test_specifications_from_yaml(
     common = yaml_tests.get('common', {})
 
     for test_name, spec in yaml_tests['tests'].items():
-        test_name: str
-        spec: dict
+        test_name: str  # type: ignore
+        spec: dict  # type: ignore
 
         for key, value in spec.items():
             common_value = common.pop(key, None)

@@ -4,7 +4,7 @@ Plugin to generate test plan report
 from __future__ import annotations
 
 import logging
-from typing import List, Union
+from typing import List, Sequence
 
 import pytest
 from _pytest.terminal import TerminalReporter
@@ -29,15 +29,13 @@ class TestPlanPlugin:
     def __init__(
         self,
         config: pytest.Config,
-        writers: Union[BaseReportWriter, list[BaseReportWriter]]
+        writers: Sequence[BaseReportWriter]
     ):
         """
         :param config: pytest.Config
         :param writers: list of SpecReportInterface
         """
         self.config = config
-        if not isinstance(writers, list):
-            writers = [writers]
         self.writers = writers
 
     def _item_as_dict(self, item: pytest.Item) -> dict:
