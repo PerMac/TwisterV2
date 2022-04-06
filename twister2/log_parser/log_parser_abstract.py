@@ -24,7 +24,7 @@ class LogParserAbstract(abc.ABC):
 class SubTestResult:
     """Store result for single C tests."""
     testname: str
-    result: str
+    result: str  # one from PASS, FAIL, SKIP
     duration: float
 
     def __post_init__(self):
